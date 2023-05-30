@@ -1,9 +1,7 @@
 ﻿using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
-using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 using System.Net;
 
 namespace CalendarPlanning.Server.Controllers
@@ -23,7 +21,14 @@ namespace CalendarPlanning.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _employeesService.GetEmployeesAsync());
+            try
+            {
+                return Ok(await _employeesService.GetEmployeesAsync());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         // GET: api/<EmployeesController>/{id}
@@ -38,6 +43,10 @@ namespace CalendarPlanning.Server.Controllers
             catch (EmployeeNotFoundException)
             {
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -55,7 +64,7 @@ namespace CalendarPlanning.Server.Controllers
                 var employee = await _employeesService.CreateEmployeeAsync(addEmployeeRequest);
                 return CreatedAtRoute("GetEmployeeById", new { id = employee.EmployeeId }, employee);
             }
-            catch (InvalidEmployeeRequestException ex)
+            catch (InvalidRequestException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -79,9 +88,17 @@ namespace CalendarPlanning.Server.Controllers
             {
                 return NotFound();
             }
-            catch (InvalidEmployeeRequestException ex)
+            catch (EmployeeSaveUpdateException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (InvalidRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -97,6 +114,10 @@ namespace CalendarPlanning.Server.Controllers
             catch (EmployeeNotFoundException)
             {
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }

@@ -2,7 +2,6 @@
 using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
@@ -44,14 +43,18 @@ namespace CalendarPlanning.Server.Repositories
             return await _dbContext.Employees.ToListAsync();
         }
 
-        public async Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
-            var employee = await GetEmployeeByIdAsync(id) ?? throw new EmployeeNotFoundException(id);
-            employee.FirstName = updateEmployeeRequest.FirstName;
-            employee.LastName = updateEmployeeRequest.LastName;
-            employee.StoreId = updateEmployeeRequest.StoreId;
+            _dbContext.Employees.Update(employee);
 
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
+            }
             return employee;
         }
     }

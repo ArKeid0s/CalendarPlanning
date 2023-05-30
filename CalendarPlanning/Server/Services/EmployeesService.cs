@@ -8,11 +8,11 @@ namespace CalendarPlanning.Server.Services
 {
     public class EmployeesService : IEmployeesService
     {
-        private readonly IEmployeesRepository _employeeRepository;
+        private readonly IEmployeesRepository _employeesRepository;
 
-        public EmployeesService(IEmployeesRepository employeeRepository)
+        public EmployeesService(IEmployeesRepository employeesRepository)
         {
-            _employeeRepository = employeeRepository;
+            _employeesRepository = employeesRepository;
         }
 
         public async Task<Employee> CreateEmployeeAsync(AddEmployeeRequest addEmployeeRequest)
@@ -21,35 +21,39 @@ namespace CalendarPlanning.Server.Services
 
             var employee = new Employee()
             {
-                EmployeeId = Guid.NewGuid(),
                 FirstName = addEmployeeRequest.FirstName,
                 LastName = addEmployeeRequest.LastName,
                 StoreId = addEmployeeRequest.StoreId
             };
 
-            return await _employeeRepository.CreateEmployeeAsync(employee);
+            return await _employeesRepository.CreateEmployeeAsync(employee);
         }
 
         public async Task<Employee> DeleteEmployeeAsync(Guid id)
         {
-            return await _employeeRepository.DeleteEmployeeAsync(id);
+            return await _employeesRepository.DeleteEmployeeAsync(id);
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(Guid id)
         {
-            return await _employeeRepository.GetEmployeeByIdAsync(id);
+            return await _employeesRepository.GetEmployeeByIdAsync(id);
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
         {
-            return await _employeeRepository.GetEmployeesAsync();
+            return await _employeesRepository.GetEmployeesAsync();
         }
 
         public async Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             updateEmployeeRequest.Validate();
 
-            return await _employeeRepository.UpdateEmployeeAsync(id, updateEmployeeRequest);
+            var employee = await _employeesRepository.GetEmployeeByIdAsync(id) ?? throw new EmployeeNotFoundException(id);
+            employee.FirstName = updateEmployeeRequest.FirstName;
+            employee.LastName = updateEmployeeRequest.LastName;
+            employee.StoreId = updateEmployeeRequest.StoreId;
+
+            return await _employeesRepository.UpdateEmployeeAsync(employee);
         }
     }
 }

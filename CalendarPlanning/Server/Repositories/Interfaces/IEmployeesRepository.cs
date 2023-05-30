@@ -1,5 +1,4 @@
 ﻿using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Repositories.Interfaces
 {
@@ -8,7 +7,7 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
         Task<IEnumerable<Employee>> GetEmployeesAsync();
         Task<Employee> GetEmployeeByIdAsync(Guid id);
         Task<Employee> CreateEmployeeAsync(Employee employee);
-        Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest employee);
+        Task<Employee> UpdateEmployeeAsync(Employee employee);
         Task<Employee> DeleteEmployeeAsync(Guid id);
     }
 }
