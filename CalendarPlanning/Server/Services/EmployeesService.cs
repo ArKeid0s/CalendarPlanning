@@ -1,4 +1,5 @@
-﻿using CalendarPlanning.Server.Repositories.Interfaces;
+﻿using CalendarPlanning.Server.Exceptions;
+using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
@@ -14,8 +15,10 @@ namespace CalendarPlanning.Server.Services
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<bool> CreateEmployeeAsync(AddEmployeeRequest addEmployeeRequest)
+        public async Task<Employee> CreateEmployeeAsync(AddEmployeeRequest addEmployeeRequest)
         {
+            addEmployeeRequest.Validate();
+
             var employee = new Employee()
             {
                 EmployeeId = Guid.NewGuid(),
@@ -27,31 +30,25 @@ namespace CalendarPlanning.Server.Services
             return await _employeeRepository.CreateEmployeeAsync(employee);
         }
 
-        public async Task<bool> DeleteEmployeeAsync(Guid id)
+        public async Task<Employee> DeleteEmployeeAsync(Guid id)
         {
             return await _employeeRepository.DeleteEmployeeAsync(id);
         }
 
-        public async Task<Employee?> GetEmployeeByIdAsync(Guid id)
+        public async Task<Employee> GetEmployeeByIdAsync(Guid id)
         {
             return await _employeeRepository.GetEmployeeByIdAsync(id);
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
         {
-            try
-            {
-                return await _employeeRepository.GetEmployeesAsync();
-            }
-            catch (Exception)
-            {
-                // TODO: Clean logs
-                throw;
-            }
+            return await _employeeRepository.GetEmployeesAsync();
         }
 
-        public async Task<bool> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        public async Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
+            updateEmployeeRequest.Validate();
+
             return await _employeeRepository.UpdateEmployeeAsync(id, updateEmployeeRequest);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using CalendarPlanning.Server.Data;
+using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
@@ -15,39 +16,27 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<bool> CreateEmployeeAsync(Employee employee)
+        public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
-            try
-            {
-                await _dbContext.Employees.AddAsync(employee);
-                var saveResult = await _dbContext.SaveChangesAsync();
+            _dbContext.Employees.Add(employee);
+            await _dbContext.SaveChangesAsync();
 
-                return saveResult > 0; // renvoie true si au moins une entité a été affectée (sauvegardée), false sinon
-            }
-            catch (Exception)
-            {
-                // TODO: clean log
-                return false;
-            }
+            return employee;
         }
 
-        public async Task<bool> DeleteEmployeeAsync(Guid id)
+        public async Task<Employee> DeleteEmployeeAsync(Guid id)
         {
-            var employee = await GetEmployeeByIdAsync(id);
-            if (employee != null)
-            {
-                _dbContext.Employees.Remove(employee);
-                var saveResult = await _dbContext.SaveChangesAsync();
+            var employee = await GetEmployeeByIdAsync(id) ?? throw new EmployeeNotFoundException(id);
+            _dbContext.Employees.Remove(employee);
+            await _dbContext.SaveChangesAsync();
 
-                return saveResult > 0;
-            }
-
-            return false;
+            return employee;
         }
 
-        public async Task<Employee?> GetEmployeeByIdAsync(Guid employeeId)
+        public async Task<Employee> GetEmployeeByIdAsync(Guid employeeId)
         {
-            return await _dbContext.Employees.FindAsync(employeeId);
+            var employee = await _dbContext.Employees.FindAsync(employeeId) ?? throw new EmployeeNotFoundException(employeeId);
+            return employee;
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
@@ -55,21 +44,15 @@ namespace CalendarPlanning.Server.Repositories
             return await _dbContext.Employees.ToListAsync();
         }
 
-        public async Task<bool> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        public async Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
-            var employee = await GetEmployeeByIdAsync(id);
+            var employee = await GetEmployeeByIdAsync(id) ?? throw new EmployeeNotFoundException(id);
+            employee.FirstName = updateEmployeeRequest.FirstName;
+            employee.LastName = updateEmployeeRequest.LastName;
+            employee.StoreId = updateEmployeeRequest.StoreId;
 
-            if (employee != null)
-            {
-                employee.FirstName = updateEmployeeRequest.FirstName;
-                employee.LastName = updateEmployeeRequest.LastName;
-                employee.StoreId = updateEmployeeRequest.StoreId;
-
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-
-            return false; //TODO: throw custom exception
+            await _dbContext.SaveChangesAsync();
+            return employee;
         }
     }
 }

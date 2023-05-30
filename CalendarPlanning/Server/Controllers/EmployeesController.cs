@@ -1,7 +1,9 @@
-﻿using CalendarPlanning.Server.Services.Interfaces;
+﻿using CalendarPlanning.Server.Exceptions;
+using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace CalendarPlanning.Server.Controllers
@@ -10,59 +12,92 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly IEmployeesService _employeeService;
+        private readonly IEmployeesService _employeesService;
 
-        public EmployeesController(IEmployeesService employeeService)
+        public EmployeesController(IEmployeesService employeesService)
         {
-            _employeeService = employeeService;
+            _employeesService = employeesService;
         }
 
         // GET: api/<EmployeesController>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _employeeService.GetEmployeesAsync());
+            return Ok(await _employeesService.GetEmployeesAsync());
         }
 
         // GET: api/<EmployeesController>/{id}
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}", Name = "GetEmployeeById")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var employee = await _employeeService.GetEmployeeByIdAsync(id);
-
-            if (employee == null)
+            try
+            {
+                var employee = await _employeesService.GetEmployeeByIdAsync(id);
+                return Ok(employee);
+            }
+            catch (EmployeeNotFoundException)
             {
                 return NotFound();
             }
-
-            return Ok(employee);
         }
 
         // POST api/<EmployeesController>
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] AddEmployeeRequest addEmployeeRequest)
         {
-            var result = await _employeeService.CreateEmployeeAsync(addEmployeeRequest);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return result ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
+            try
+            {
+                var employee = await _employeesService.CreateEmployeeAsync(addEmployeeRequest);
+                return CreatedAtRoute("GetEmployeeById", new { id = employee.EmployeeId }, employee);
+            }
+            catch (InvalidEmployeeRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+
         }
 
         // PUT api/<EmployeesController>/5
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
-            var result = await _employeeService.UpdateEmployeeAsync(id, updateEmployeeRequest);
-
-            return result ? Ok(result) : NotFound(); // TODO: return created at route
+            try
+            {
+                await _employeesService.UpdateEmployeeAsync(id, updateEmployeeRequest);
+                return NoContent();
+            }
+            catch (EmployeeNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (InvalidEmployeeRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<EmployeesController>/5
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _employeeService.DeleteEmployeeAsync(id);
-
-            return result ? Ok(result) : NotFound();
+            try
+            {
+                await _employeesService.DeleteEmployeeAsync(id);
+                return NoContent();
+            }
+            catch (EmployeeNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }
