@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace CalendarPlanning.Shared.Models.Requests
 {
-    public class UpdateEmployeeRequest : IEmployeeRequest
+    public class UpdateEmployeeRequest : ControllerRequest
     {
         [Required]
         [MaxLength(50)]
@@ -17,18 +17,5 @@ namespace CalendarPlanning.Shared.Models.Requests
         
         [Required]
         public Guid StoreId { get; set; }
-
-        public void Validate()
-        {
-            var context = new ValidationContext(this);
-            var results = new List<ValidationResult>();
-
-            bool isValid = Validator.TryValidateObject(this, context, results, true);
-
-            if (!isValid)
-            {
-                throw new InvalidEmployeeRequestException(string.Join(", ", results.Select(r => r.ErrorMessage)));
-            }
-        }
     }
 }

@@ -1,9 +1,17 @@
-﻿namespace CalendarPlanning.Shared.Models.Requests
+﻿using CalendarPlanning.Shared.Models.Requests.Interfaces;
+
+using System.ComponentModel.DataAnnotations;
+namespace CalendarPlanning.Shared.Models.Requests
 {
-    public class AddHolidayRequest
+    public class AddHolidayRequest : ControllerRequest
     {
+        [Required]
         public Guid EmployeeId { get; set; }
+
+        [Required]
         public DateTime StartDate { get; set; }
+
+        [Required]
         public DateTime EndDate { get; set; }
     }
 }
