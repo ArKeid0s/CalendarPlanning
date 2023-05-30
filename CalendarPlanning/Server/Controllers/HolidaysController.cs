@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CalendarPlanning.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarPlanning.Server.Controllers
 {
@@ -6,5 +7,11 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class HolidaysController : ControllerBase
     {
+        private readonly IHolidayService _holidayService;
+
+        public HolidaysController(IHolidayService holidayService)
+        {
+            _holidayService = holidayService;
+        }
     }
 }

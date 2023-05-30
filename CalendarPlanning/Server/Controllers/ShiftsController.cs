@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CalendarPlanning.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarPlanning.Server.Controllers
 {
@@ -6,5 +7,12 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class ShiftsController : ControllerBase
     {
+        private readonly IShiftService _shiftService;
+
+        public ShiftsController(IShiftService shiftService)
+        {
+            _shiftService = shiftService;
+
+        }
     }
 }

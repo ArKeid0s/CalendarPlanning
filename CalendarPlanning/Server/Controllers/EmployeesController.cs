@@ -1,9 +1,7 @@
-﻿using CalendarPlanning.Server.Data;
-using CalendarPlanning.Server.Services.Interfaces;
+﻿using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace CalendarPlanning.Server.Controllers

@@ -2,7 +2,6 @@
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CalendarPlanning.Server.Services
 {
