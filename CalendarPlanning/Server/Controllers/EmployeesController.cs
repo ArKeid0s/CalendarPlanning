@@ -25,9 +25,8 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // GET: api/<EmployeesController>/{id}
-        [HttpGet]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> Get(Guid id)
         {
             var employee = await _employeeService.GetEmployeeByIdAsync(id);
 
@@ -49,9 +48,8 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // PUT api/<EmployeesController>/5
-        [HttpPut]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateEmployee([FromRoute] Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             var result = await _employeeService.UpdateEmployeeAsync(id, updateEmployeeRequest);
 
@@ -59,9 +57,8 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // DELETE api/<EmployeesController>/5
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _employeeService.DeleteEmployeeAsync(id);
 
