@@ -6,7 +6,7 @@ namespace CalendarPlanning.Server.Services
 {
     public class StoresService : IStoresService
     {
-        public Task<bool> CreateStoreAsync(Store store)
+        public Task<bool> CreateStoreAsync(AddStoreRequest store)
         {
             throw new NotImplementedException();
         }
