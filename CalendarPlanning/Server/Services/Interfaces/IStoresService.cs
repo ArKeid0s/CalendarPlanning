@@ -1,9 +1,9 @@
 ﻿using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 
-namespace CalendarPlanning.Server.Repositories.Interfaces
+namespace CalendarPlanning.Server.Services.Interfaces
 {
-    public interface IStoreRepository
+    public interface IStoresService
     {
         Task<IEnumerable<Store>> GetStoresAsync();
         Task<Store?> GetStoreByIdAsync(Guid id);

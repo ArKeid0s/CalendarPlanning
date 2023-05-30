@@ -10,9 +10,9 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly IEmployeesService _employeeService;
 
-        public EmployeesController(IEmployeeService employeeService)
+        public EmployeesController(IEmployeesService employeeService)
         {
             _employeeService = employeeService;
         }

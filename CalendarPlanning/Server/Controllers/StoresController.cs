@@ -1,4 +1,5 @@
-﻿using CalendarPlanning.Server.Services.Interfaces;
+﻿using CalendarPlanning.Server.Services;
+using CalendarPlanning.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarPlanning.Server.Controllers
@@ -7,11 +8,18 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class StoresController : ControllerBase
     {
-        private readonly IStoreService _storeService;
+        private readonly IStoresService _storeService;
 
-        public StoresController(IStoreService storeService)
+        public StoresController(IStoresService storeService)
         {
             _storeService = storeService;
+        }
+
+        // GET: api/<StoresController>
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            return Ok(await _storeService.GetStoresAsync());
         }
     }
 }

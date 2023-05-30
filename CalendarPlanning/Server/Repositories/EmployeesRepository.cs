@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeesRepository : IEmployeesRepository
     {
         private readonly APIDbContext _dbContext;
 
-        public EmployeeRepository(APIDbContext dbContext)
+        public EmployeesRepository(APIDbContext dbContext)
         {
             _dbContext = dbContext;
         }

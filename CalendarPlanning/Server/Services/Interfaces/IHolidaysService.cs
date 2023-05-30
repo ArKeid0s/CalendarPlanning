@@ -3,7 +3,7 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {
-    public interface IHolidayService
+    public interface IHolidaysService
     {
         Task<IEnumerable<Holiday>> GetHolidaysAsync();
         Task<Holiday?> GetHolidayByIdAsync(Guid id);

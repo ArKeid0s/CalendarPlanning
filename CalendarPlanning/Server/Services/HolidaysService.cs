@@ -1,10 +1,10 @@
-﻿using CalendarPlanning.Server.Repositories.Interfaces;
+﻿using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 
-namespace CalendarPlanning.Server.Repositories
+namespace CalendarPlanning.Server.Services
 {
-    public class HolidayRepository : IHolidayRepository
+    public class HolidaysService : IHolidaysService
     {
         public Task<bool> CreateHolidayAsync(Holiday Holiday)
         {

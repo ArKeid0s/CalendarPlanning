@@ -4,7 +4,7 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Repositories
 {
-    public class ShiftRepository : IShiftRepository
+    public class ShiftsRepository : IShiftsRepository
     {
         public Task<bool> CreateShiftAsync(Shift shift)
         {

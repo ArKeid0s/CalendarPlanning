@@ -1,10 +1,10 @@
-﻿using CalendarPlanning.Server.Services.Interfaces;
+﻿using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 
-namespace CalendarPlanning.Server.Services
+namespace CalendarPlanning.Server.Repositories
 {
-    public class ScheduleService : IScheduleService
+    public class SchedulesRepository : ISchedulesRepository
     {
         public Task<bool> CreateScheduleAsync(Schedule schedule)
         {

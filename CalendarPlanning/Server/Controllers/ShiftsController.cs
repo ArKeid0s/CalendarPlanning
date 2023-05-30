@@ -7,9 +7,9 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class ShiftsController : ControllerBase
     {
-        private readonly IShiftService _shiftService;
+        private readonly IShiftsService _shiftService;
 
-        public ShiftsController(IShiftService shiftService)
+        public ShiftsController(IShiftsService shiftService)
         {
             _shiftService = shiftService;
 

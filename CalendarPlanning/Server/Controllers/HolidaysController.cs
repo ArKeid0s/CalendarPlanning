@@ -7,9 +7,9 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class HolidaysController : ControllerBase
     {
-        private readonly IHolidayService _holidayService;
+        private readonly IHolidaysService _holidayService;
 
-        public HolidaysController(IHolidayService holidayService)
+        public HolidaysController(IHolidaysService holidayService)
         {
             _holidayService = holidayService;
         }

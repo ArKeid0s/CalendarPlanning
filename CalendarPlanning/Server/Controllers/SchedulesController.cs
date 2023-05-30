@@ -7,9 +7,9 @@ namespace CalendarPlanning.Server.Controllers
     [ApiController]
     public class SchedulesController : ControllerBase
     {
-        private readonly IScheduleService _scheduleService;
+        private readonly ISchedulesService _scheduleService;
 
-        public SchedulesController(IScheduleService scheduleService)
+        public SchedulesController(ISchedulesService scheduleService)
         {
             _scheduleService = scheduleService;
         }

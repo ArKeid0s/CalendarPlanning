@@ -36,18 +36,18 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // === INJECTION ===
 
 // --- Repositories ---
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IHolidayRepository, HolidayRepository>();
-builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
-builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
-builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
+builder.Services.AddScoped<IHolidaysRepository, HolidaysRepository>();
+builder.Services.AddScoped<ISchedulesRepository, SchedulesRepository>();
+builder.Services.AddScoped<IShiftsRepository, ShiftsRepository>();
+builder.Services.AddScoped<IStoresRepository, StoresRepository>();
 
 // --- Services ---
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IHolidayService, HolidayService>();
-builder.Services.AddScoped<IScheduleService, ScheduleService>();
-builder.Services.AddScoped<IShiftService, ShiftService>();
-builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IEmployeesService, EmployeesService>();
+builder.Services.AddScoped<IHolidaysService, HolidaysService>();
+builder.Services.AddScoped<ISchedulesService, SchedulesService>();
+builder.Services.AddScoped<IShiftsService, ShiftsService>();
+builder.Services.AddScoped<IStoresService, StoresService>();
 
 // === INJECTION ===
 

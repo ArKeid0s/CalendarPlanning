@@ -1,9 +1,9 @@
 ﻿using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 
-namespace CalendarPlanning.Server.Repositories.Interfaces
+namespace CalendarPlanning.Server.Services.Interfaces
 {
-    public interface IShiftRepository
+    public interface IShiftsService
     {
         Task<IEnumerable<Shift>> GetShiftsAsync();
         Task<Shift?> GetShiftByIdAsync(Guid id);

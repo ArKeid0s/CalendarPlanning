@@ -5,11 +5,11 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeesService : IEmployeesService
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmployeesRepository _employeeRepository;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeesService(IEmployeesRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
         }

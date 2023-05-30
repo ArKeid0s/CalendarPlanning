@@ -3,7 +3,7 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {
-    public interface IScheduleService
+    public interface ISchedulesService
     {
         Task<IEnumerable<Schedule>> GetSchedulesAsync();
         Task<Schedule?> GetScheduleByIdAsync(Guid id);

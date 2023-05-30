@@ -4,7 +4,7 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Repositories
 {
-    public class StoreRepository : IStoreRepository
+    public class StoresRepository : IStoresRepository
     {
         public Task<bool> CreateStoreAsync(Store store)
         {

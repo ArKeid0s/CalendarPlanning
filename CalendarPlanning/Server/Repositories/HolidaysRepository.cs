@@ -4,29 +4,29 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Repositories
 {
-    public class ScheduleRepository : IScheduleRepository
+    public class HolidaysRepository : IHolidaysRepository
     {
-        public Task<bool> CreateScheduleAsync(Schedule schedule)
+        public Task<bool> CreateHolidayAsync(Holiday Holiday)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteScheduleAsync(Guid id)
+        public Task<bool> DeleteHolidayAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Schedule?> GetScheduleByIdAsync(Guid id)
+        public Task<Holiday?> GetHolidayByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Schedule>> GetSchedulesAsync()
+        public Task<IEnumerable<Holiday>> GetHolidaysAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateScheduleAsync(Guid id, UpdateScheduleRequest updateScheduleRequest)
+        public Task<bool> UpdateHolidayAsync(Guid id, UpdateHolidayRequest updateHolidayRequest)
         {
             throw new NotImplementedException();
         }

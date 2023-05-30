@@ -4,29 +4,29 @@ using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services
 {
-    public class StoreService : IStoreService
+    public class ShiftsService : IShiftsService
     {
-        public Task<bool> CreateStoreAsync(Store store)
+        public Task<bool> CreateShiftAsync(Shift shift)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteStoreAsync(Guid id)
+        public Task<bool> DeleteShiftAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Store?> GetStoreByIdAsync(Guid id)
+        public Task<Shift?> GetShiftByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Store>> GetStoresAsync()
+        public Task<IEnumerable<Shift>> GetShiftsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest)
+        public Task<bool> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest)
         {
             throw new NotImplementedException();
         }
