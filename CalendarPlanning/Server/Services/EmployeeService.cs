@@ -18,7 +18,7 @@ namespace CalendarPlanning.Server.Services
         {
             var employee = new Employee()
             {
-                Id = Guid.NewGuid(),
+                EmployeeId = Guid.NewGuid(),
                 FirstName = addEmployeeRequest.FirstName,
                 LastName = addEmployeeRequest.LastName,
                 StoreId = addEmployeeRequest.StoreId

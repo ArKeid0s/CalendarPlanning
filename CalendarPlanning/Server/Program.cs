@@ -22,7 +22,12 @@ builder.Services.AddSwaggerGen(c =>
 
 
 // === DATABASE ===
-builder.Services.AddDbContext<APIDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "CalendarPlanning";
+var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "sa";
+var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? "Password123";
+var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID={dbUser};Password={dbPassword};TrustServerCertificate=True";
+builder.Services.AddDbContext<APIDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // === DATABASE ===
 
@@ -67,11 +72,6 @@ else
     app.UseHsts();
 }
 
-using (IServiceScope scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    scope.ServiceProvider.GetRequiredService<APIDbContext>().Database.Migrate();
-}
-
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
@@ -80,7 +80,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
 
 app.MapRazorPages();
 app.MapControllers();

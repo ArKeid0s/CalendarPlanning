@@ -2,24 +2,29 @@ version: '3.4'
 
 services:
   calendarplanning.server:
-    container_name: calendar_planning
+    container_name: calendar_planning_api
     image: ${DOCKER_REGISTRY-}calendarplanningserver
     build:
       context: .
       dockerfile: CalendarPlanning/Server/Dockerfile
     ports:
-        - 8001:80
+        - 8002:80
     depends_on:
         - sql_server_db
     networks:
         - calendarplanning_network
+    environment:
+        - DB_HOST=sql_server_db
+        - DB_NAME=CalendarPlanning
+        - DB_SA_PASSWORD=Adminpwd99!
     
 
 
   sql_server_db:
+    container_name: calendar_planning_db  
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-        - 1433:1433
+        - 8001:1433
     environment:
         - ACCEPT_EULA=Y
         - SA_PASSWORD=Adminpwd99!
