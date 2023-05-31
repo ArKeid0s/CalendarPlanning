@@ -2,7 +2,7 @@
 
 namespace CalendarPlanning.Shared.Models.Requests
 {
-    public class UpdateScheduleRequest
+    public class UpdateScheduleRequest : RequestModelBase
     {
         [Required]
         public Guid StoreId { get; set; }
