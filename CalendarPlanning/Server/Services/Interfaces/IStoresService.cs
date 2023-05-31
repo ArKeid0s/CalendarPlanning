@@ -6,9 +6,9 @@ namespace CalendarPlanning.Server.Services.Interfaces
     public interface IStoresService
     {
         Task<IEnumerable<Store>> GetStoresAsync();
-        Task<Store?> GetStoreByIdAsync(Guid id);
-        Task<bool> CreateStoreAsync(AddStoreRequest store);
-        Task<bool> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest);
-        Task<bool> DeleteStoreAsync(Guid id);
+        Task<Store> GetStoreByIdAsync(Guid id);
+        Task<Store> CreateStoreAsync(AddStoreRequest addStoreRequest);
+        Task<Store> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest);
+        Task<Store> DeleteStoreAsync(Guid id);
     }
 }

@@ -1,4 +1,6 @@
-﻿using CalendarPlanning.Server.Services.Interfaces;
+﻿using CalendarPlanning.Server.Exceptions;
+using CalendarPlanning.Server.Repositories.Interfaces;
+using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
 
@@ -6,29 +8,50 @@ namespace CalendarPlanning.Server.Services
 {
     public class StoresService : IStoresService
     {
-        public Task<bool> CreateStoreAsync(AddStoreRequest store)
+        private readonly IStoresRepository _storesRepository;
+
+        public StoresService(IStoresRepository storesRepository)
         {
-            throw new NotImplementedException();
+            _storesRepository = storesRepository;
         }
 
-        public Task<bool> DeleteStoreAsync(Guid id)
+        public async Task<Store> CreateStoreAsync(AddStoreRequest addStoreRequest)
         {
-            throw new NotImplementedException();
+            addStoreRequest.Validate();
+
+            var store = new Store()
+            {
+                Name = addStoreRequest.Name,
+                Address = addStoreRequest.Address
+            };
+
+            return await _storesRepository.CreateStoreAsync(store);
         }
 
-        public Task<Store?> GetStoreByIdAsync(Guid id)
+        public async Task<Store> DeleteStoreAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _storesRepository.DeleteStoreAsync(id);
+        }
+
+        public async Task<Store> GetStoreByIdAsync(Guid id)
+        {
+            return await _storesRepository.GetStoreByIdAsync(id);
         }
 
         public Task<IEnumerable<Store>> GetStoresAsync()
         {
-            throw new NotImplementedException();
+            return _storesRepository.GetStoresAsync();
         }
 
-        public Task<bool> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest)
+        public async Task<Store> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest)
         {
-            throw new NotImplementedException();
+            updateStoreRequest.Validate();
+
+            var store = await _storesRepository.GetStoreByIdAsync(id) ?? throw new StoreNotFoundException(id);
+            store.Name = updateStoreRequest.Name;
+            store.Address = updateStoreRequest.Address;
+
+            return await _storesRepository.UpdateStoreAsync(store);
         }
     }
 }

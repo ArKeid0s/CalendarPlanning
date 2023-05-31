@@ -1,7 +1,9 @@
 ﻿using CalendarPlanning.Server.Data;
+using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests;
+using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
 {
@@ -14,29 +16,49 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<bool> CreateStoreAsync(Store store)
+        public async Task<Store> CreateStoreAsync(Store store)
         {
-            throw new NotImplementedException();
+            _dbContext.Stores.Add(store);
+            await _dbContext.SaveChangesAsync();
+
+            return store;
         }
 
-        public Task<bool> DeleteStoreAsync(Guid id)
+        public async Task<Store> DeleteStoreAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var store = await GetStoreByIdAsync(id) ?? throw new StoreNotFoundException(id);
+            _dbContext.Stores.Remove(store);
+            await _dbContext.SaveChangesAsync();
+
+            return store;
         }
 
-        public Task<Store?> GetStoreByIdAsync(Guid id)
+        public async Task<Store> GetStoreByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var store = await _dbContext.Stores.FindAsync(id) ?? throw new StoreNotFoundException(id);
+
+            return store;
         }
 
-        public Task<IEnumerable<Store>> GetStoresAsync()
+        public async Task<IEnumerable<Store>> GetStoresAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Stores.ToListAsync();
         }
 
-        public Task<bool> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest)
+        public async Task<Store> UpdateStoreAsync(Store store)
         {
-            throw new NotImplementedException();
+            _dbContext.Stores.Update(store);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new StoreSaveUpdateException(store.StoreId, ex.Message);
+            }
+
+            return store;
         }
     }
 }
