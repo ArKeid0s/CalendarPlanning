@@ -35,6 +35,7 @@ namespace CalendarPlanning.Server.Repositories
         public async Task<Employee> GetEmployeeByIdAsync(Guid employeeId)
         {
             var employee = await _dbContext.Employees.FindAsync(employeeId) ?? throw new EmployeeNotFoundException(employeeId);
+
             return employee;
         }
 
@@ -55,6 +56,7 @@ namespace CalendarPlanning.Server.Repositories
             {
                 throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
             }
+
             return employee;
         }
     }

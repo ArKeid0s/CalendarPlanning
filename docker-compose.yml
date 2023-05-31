@@ -12,7 +12,7 @@ services:
     depends_on:
         - sql_server_db
     networks:
-        - calendarplanning_network
+        - backend
     environment:
         - DB_HOST=sql_server_db
         - DB_NAME=CalendarPlanning
@@ -29,7 +29,7 @@ services:
         - ACCEPT_EULA=Y
         - SA_PASSWORD=Adminpwd99!
     networks:
-        - calendarplanning_network
+        - backend
 
 networks:
-  calendarplanning_network:
+  backend:
