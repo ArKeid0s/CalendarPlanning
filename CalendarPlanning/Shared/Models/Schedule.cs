@@ -10,16 +10,18 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ScheduleId { get; set; }
 
+        [Required]
+        [Column(TypeName = "datetime")]
+        public required DateTime WeekStart { get; set; }
+
+        [Required]
+        [Column(TypeName = "datetime")]
+        public required DateTime WeekEnd { get; set; }
+
         [ForeignKey("StoreId")]
-        public Store? Store { get; set; }
+        public virtual Store? Store { get; set; }
         public Guid StoreId { get; set; }
 
-        [Required]
-        [Column(TypeName = "datetime")]
-        public DateTime WeekStart { get; set; }
-
-        [Required]
-        [Column(TypeName = "datetime")]
-        public DateTime WeekEnd { get; set; }
+        public virtual ICollection<Shift>? Shifts { get; set; }
     }
 }

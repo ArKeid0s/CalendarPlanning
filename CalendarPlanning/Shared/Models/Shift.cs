@@ -10,20 +10,20 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ShiftId { get; set; }
 
+        [Required]
+        [Column(TypeName = "datetime")]
+        public required DateTime StartDateTime { get; set; }
+
+        [Required]
+        [Column(TypeName = "datetime")]
+        public required DateTime EndDateTime { get; set; }
+
         [ForeignKey("EmployeeId")]
-        public Employee? Employee { get; set; }
+        public virtual Employee? Employee { get; set; }
         public Guid EmployeeId { get; set; }
 
         [ForeignKey("ScheduleId")]
-        public Schedule? Schedule { get; set; }
+        public virtual Schedule? Schedule { get; set; }
         public Guid ScheduleId { get; set; }
-
-        [Required]
-        [Column(TypeName = "datetime")]
-        public DateTime StartDateTime { get; set; }
-
-        [Required]
-        [Column(TypeName = "datetime")]
-        public DateTime EndDateTime { get; set; }
     }
 }

@@ -12,10 +12,13 @@ namespace CalendarPlanning.Shared.Models
 
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string Name { get; set; } = string.Empty;
+        public required string Name { get; set; } = null!;
 
         [Required]
         [Column(TypeName = "nvarchar(200)")]
-        public string Address { get; set; } = string.Empty;
+        public required string Address { get; set; } = null!;
+
+        public virtual ICollection<Employee>? Employees { get; set; }
+        public virtual ICollection<Schedule>? Schedules { get; set; }
     }
 }
