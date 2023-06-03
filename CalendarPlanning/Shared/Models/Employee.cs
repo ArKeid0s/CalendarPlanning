@@ -10,14 +10,19 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid EmployeeId { get; set; }
 
+        [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string FirstName { get; set; } = string.Empty;
+        public required string FirstName { get; set; } = null!;
 
+        [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string LastName { get; set; } = string.Empty;
+        public required string LastName { get; set; } = null!;
 
         [ForeignKey("StoreId")]
-        public Store? Store { get; set; }
+        public virtual Store? Store { get; set; }
         public Guid StoreId { get; set; }
+
+        public virtual ICollection<Shift>? Shifts { get; set; }
+        public virtual ICollection<Holiday>? Holidays { get; set; }
     }
 }

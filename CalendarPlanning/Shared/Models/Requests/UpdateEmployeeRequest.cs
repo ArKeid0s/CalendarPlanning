@@ -6,13 +6,13 @@ namespace CalendarPlanning.Shared.Models.Requests
     {
         [Required]
         [MaxLength(50)]
-        public string FirstName { get; set; } = string.Empty;
+        public required string FirstName { get; set; }
         
         [Required]
         [MaxLength(50)]
-        public string LastName { get; set; } = string.Empty;
+        public required string LastName { get; set; }
         
         [Required]
-        public Guid StoreId { get; set; }
+        public required string StoreName { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class StoreNotFoundException : Exception
     {
-        public StoreNotFoundException(Guid id) : base($"Store with id {id} not found.")
+        public StoreNotFoundException(object id) : base($"Store with id {id} not found.")
         {
         }
     }

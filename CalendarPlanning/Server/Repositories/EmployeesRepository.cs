@@ -1,7 +1,9 @@
 ﻿using CalendarPlanning.Server.Data;
 using CalendarPlanning.Server.Exceptions;
+using CalendarPlanning.Server.Mapper;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
+using CalendarPlanning.Shared.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
@@ -10,41 +12,48 @@ namespace CalendarPlanning.Server.Repositories
     {
         private readonly APIDbContext _dbContext;
 
+        private readonly EmployeeToEmployeeDtoModelMapper _mapper = new();
+
         public EmployeesRepository(APIDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<Employee> CreateEmployeeAsync(Employee employee)
+        public async Task<EmployeeDto> CreateEmployeeAsync(Employee employee)
         {
             _dbContext.Employees.Add(employee);
             await _dbContext.SaveChangesAsync();
 
-            return employee;
+            return _mapper.MapToEmployeeDto(employee);
         }
 
-        public async Task<Employee> DeleteEmployeeAsync(Guid id)
+        public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
         {
-            var employee = await GetEmployeeByIdAsync(id) ?? throw new EmployeeNotFoundException(id);
+            var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.EmployeeId == id) ?? throw new EmployeeNotFoundException(id);
             _dbContext.Employees.Remove(employee);
             await _dbContext.SaveChangesAsync();
 
-            return employee;
+            return _mapper.MapToEmployeeDto(employee);
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(Guid employeeId)
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
         {
-            var employee = await _dbContext.Employees.FindAsync(employeeId) ?? throw new EmployeeNotFoundException(employeeId);
+            var employee = await _dbContext.Employees
+                .Include(e => e.Store)
+                .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
+                ?? throw new EmployeeNotFoundException(employeeId);
 
-            return employee;
+            return _mapper.MapToEmployeeDto(employee);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeesAsync()
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync()
         {
-            return await _dbContext.Employees.ToListAsync();
+            var employees = await _dbContext.Employees.Include(e => e.Store).ToListAsync();
+
+            return employees.Select(_mapper.MapToEmployeeDto);
         }
 
-        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
+        public async Task<EmployeeDto> UpdateEmployeeAsync(Employee employee)
         {
             _dbContext.Employees.Update(employee);
 
@@ -57,7 +66,7 @@ namespace CalendarPlanning.Server.Repositories
                 throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
             }
 
-            return employee;
+            return _mapper.MapToEmployeeDto(employee);
         }
     }
 }

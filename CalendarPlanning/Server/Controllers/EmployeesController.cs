@@ -52,7 +52,7 @@ namespace CalendarPlanning.Server.Controllers
 
         // POST api/<EmployeesController>
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] AddEmployeeRequest addEmployeeRequest)
+        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeRequest addEmployeeRequest)
         {
             if (!ModelState.IsValid)
             {

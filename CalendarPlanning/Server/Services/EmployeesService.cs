@@ -1,7 +1,9 @@
 ﻿using CalendarPlanning.Server.Exceptions;
+using CalendarPlanning.Server.Mapper;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
+using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services
@@ -9,49 +11,57 @@ namespace CalendarPlanning.Server.Services
     public class EmployeesService : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository;
+        private readonly IStoresRepository _storesRepository;
 
-        public EmployeesService(IEmployeesRepository employeesRepository)
+        private readonly EmployeeDtoToEmployeeModelMapper _mapper = new();
+
+        public EmployeesService(IEmployeesRepository employeesRepository, IStoresRepository storesRepository)
         {
             _employeesRepository = employeesRepository;
+            _storesRepository = storesRepository;
         }
 
-        public async Task<Employee> CreateEmployeeAsync(AddEmployeeRequest addEmployeeRequest)
+        public async Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest)
         {
-            addEmployeeRequest.Validate();
+            createEmployeeRequest.Validate();
+
+            var stores = await _storesRepository.GetStoresAsync();
+            var store = stores.FirstOrDefault(s => s.Name == createEmployeeRequest.StoreName) ?? throw new StoreNotFoundException(createEmployeeRequest.StoreName);
 
             var employee = new Employee()
             {
-                FirstName = addEmployeeRequest.FirstName,
-                LastName = addEmployeeRequest.LastName,
-                StoreId = addEmployeeRequest.StoreId
+                FirstName = createEmployeeRequest.FirstName,
+                LastName = createEmployeeRequest.LastName,
+                StoreId = store.StoreId
             };
 
             return await _employeesRepository.CreateEmployeeAsync(employee);
         }
 
-        public async Task<Employee> DeleteEmployeeAsync(Guid id)
+        public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
         {
             return await _employeesRepository.DeleteEmployeeAsync(id);
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(Guid id)
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid id)
         {
             return await _employeesRepository.GetEmployeeByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeesAsync()
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync()
         {
             return await _employeesRepository.GetEmployeesAsync();
         }
 
-        public async Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        public async Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             updateEmployeeRequest.Validate();
 
-            var employee = await _employeesRepository.GetEmployeeByIdAsync(id) ?? throw new EmployeeNotFoundException(id);
-            employee.FirstName = updateEmployeeRequest.FirstName;
-            employee.LastName = updateEmployeeRequest.LastName;
-            employee.StoreId = updateEmployeeRequest.StoreId;
+            var stores = await _storesRepository.GetStoresAsync();
+            var store = stores.FirstOrDefault(s => s.Name == updateEmployeeRequest.StoreName) ?? throw new StoreNotFoundException(updateEmployeeRequest.StoreName);
+
+            var employeeDto = await _employeesRepository.GetEmployeeByIdAsync(id);
+            var employee = _mapper.MapToEmployee(employeeDto);
 
             return await _employeesRepository.UpdateEmployeeAsync(employee);
         }

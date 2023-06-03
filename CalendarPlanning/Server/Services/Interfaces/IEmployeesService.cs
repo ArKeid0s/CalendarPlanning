@@ -1,14 +1,14 @@
-﻿using CalendarPlanning.Shared.Models;
+﻿using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {
     public interface IEmployeesService
     {
-        Task<IEnumerable<Employee>> GetEmployeesAsync();
-        Task<Employee> GetEmployeeByIdAsync(Guid id);
-        Task<Employee> CreateEmployeeAsync(AddEmployeeRequest addEmployeeRequest);
-        Task<Employee> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest);
-        Task<Employee> DeleteEmployeeAsync(Guid id);
+        Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
+        Task<EmployeeDto> GetEmployeeByIdAsync(Guid id);
+        Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest);
+        Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest);
+        Task<EmployeeDto> DeleteEmployeeAsync(Guid id);
     }
 }
