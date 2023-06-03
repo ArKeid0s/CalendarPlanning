@@ -1,5 +1,4 @@
 ﻿using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Repositories.Interfaces
 {

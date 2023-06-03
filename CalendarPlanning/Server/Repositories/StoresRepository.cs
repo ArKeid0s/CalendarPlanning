@@ -2,7 +2,6 @@
 using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
@@ -35,7 +34,7 @@ namespace CalendarPlanning.Server.Repositories
 
         public async Task<Store> GetStoreByIdAsync(Guid id)
         {
-            var store = await _dbContext.Stores.FindAsync(id) ?? throw new StoreNotFoundException(id);
+            var store = await _dbContext.Stores.Include(s => s.Employees).FirstOrDefaultAsync(s => s.StoreId == id) ?? throw new StoreNotFoundException(id);
 
             return store;
         }

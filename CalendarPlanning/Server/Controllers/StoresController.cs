@@ -1,5 +1,4 @@
 ﻿using CalendarPlanning.Server.Exceptions;
-using CalendarPlanning.Server.Services;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
