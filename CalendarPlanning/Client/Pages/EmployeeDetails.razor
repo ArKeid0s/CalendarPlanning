@@ -1,0 +1,27 @@
+﻿@page "/employees/{id}"
+
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@inject HttpClient Http
+
+<h3>Employee Details for Employee with Id @EmployeeId</h3>
+
+@if (employee is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>@employee.FirstName @employee.LastName @employee.Store.Name</p>
+}
+
+@code {
+    private Employee? employee;
+
+    [Parameter]
+    public string EmployeeId { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await Http.GetFromJsonAsync<Employee>($"api/Employee/{EmployeeId}");
+    }
+}
