@@ -1,5 +1,6 @@
-﻿@page "/employees/{id}"
+﻿@page "/employees/{EmployeeId}"
 
+@using CalendarPlanning.Shared.Models.DTO;
 @using Microsoft.AspNetCore.Components.QuickGrid;
 @inject HttpClient Http
 
@@ -11,17 +12,17 @@
 }
 else
 {
-    <p>@employee.FirstName @employee.LastName @employee.Store.Name</p>
+    <p>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</p>
 }
 
 @code {
-    private Employee? employee;
+    private EmployeeDto? employee;
 
     [Parameter]
     public string EmployeeId { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        employee = await Http.GetFromJsonAsync<Employee>($"api/Employee/{EmployeeId}");
+        employee = await Http.GetFromJsonAsync<EmployeeDto>($"api/Employees/{EmployeeId}");
     }
 }

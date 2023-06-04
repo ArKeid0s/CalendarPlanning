@@ -1,5 +1,9 @@
-﻿@using Microsoft.AspNetCore.Components.QuickGrid;
+﻿@using CalendarPlanning.Shared.Models.DTO;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
+
 <h3>EmployeeList</h3>
 
 @if (employees is null)
@@ -11,9 +15,10 @@ else
     <QuickGrid Items="employees.AsQueryable()" Pagination="paginationState">
         <PropertyColumn Property="e => e.FirstName" Title="First Name" Sortable="true" />
         <PropertyColumn Property="e => e.LastName" Title="Last Name" Sortable="true" />
-        <PropertyColumn Property="e => e.Store.Name" Title="Store" />
+        <PropertyColumn Property="e => e.StoreName" Title="Store Name" />
+        <PropertyColumn Property="e => e.StoreAddress" Title="Store Address" />
         <TemplateColumn>
-            <button class="btn btn-primary" onclick="@(() => ShowItToMe(context))"><i class="oi oi-cloud" /></button>
+            <button class="btn btn-primary" onclick="@(() => ShowItToMe(context))"><i class="oi oi-person" /></button>
         </TemplateColumn>
     </QuickGrid>
 
@@ -22,17 +27,17 @@ else
 
 
 @code {
-    private List<Employee>? employees;
+    private List<EmployeeDto>? employees;
 
     PaginationState paginationState = new PaginationState() { ItemsPerPage = 10 };
 
     protected override async Task OnInitializedAsync()
     {
-        employees = await Http.GetFromJsonAsync<List<Employee>>("api/Employee");
+        employees = await Http.GetFromJsonAsync<List<EmployeeDto>>("api/Employees");
     }
 
-    protected void ShowItToMe(Employee employee)
+    protected void ShowItToMe(EmployeeDto employee)
     {
-        Console.WriteLine($"Employee: {employee.FirstName} {employee.LastName}");
+        NavigationManager.NavigateTo($"/employees/{employee.EmployeeId}");
     }
 }
