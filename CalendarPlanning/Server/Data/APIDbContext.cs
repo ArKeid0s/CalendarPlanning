@@ -30,31 +30,10 @@ namespace CalendarPlanning.Server.Data
             }
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-
-        //    modelBuilder.Entity<Shift>()
-        //        .HasOne(s => s.Employee)
-        //        .WithMany(e => e.Shifts)
-        //        .OnDelete(DeleteBehavior.Restrict); // Prevents cascading deletes from Employee to Shift but implies that the shift deletion has to be done manually
-
-        //    modelBuilder.Entity<Shift>()
-        //        .HasOne(s => s.Schedule)
-        //        .WithMany(sc => sc.Shifts)
-        //        .OnDelete(DeleteBehavior.Restrict); // Prevents cascading deletes from Schedule to Shift but implies that the shift deletion has to be done manually
-
-        //    modelBuilder.Entity<Employee>()
-        //        .HasOne(e => e.Store)
-        //        .WithMany(s => s.Employees)
-        //        .OnDelete(DeleteBehavior.Restrict);
-
-        //}
-
 
         public DbSet<Employee> Employees { get; set; } = null!;
-        public DbSet<Holiday> Holidays { get; set; } = null!;
-        public DbSet<Schedule> Schedules { get; set; } = null!;
+        //public DbSet<Holiday> Holidays { get; set; } = null!;
+        //public DbSet<Schedule> Schedules { get; set; } = null!;
         public DbSet<Shift> Shifts { get; set; } = null!;
         public DbSet<Store> Stores { get; set; } = null!;
     }

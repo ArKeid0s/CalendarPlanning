@@ -1,14 +1,14 @@
-﻿using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
+﻿using CalendarPlanning.Shared.Models.DTO;
+using CalendarPlanning.Shared.Models.Requests.ShiftRequests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {
     public interface IShiftsService
     {
-        Task<IEnumerable<Shift>> GetShiftsAsync();
-        Task<Shift?> GetShiftByIdAsync(Guid id);
-        Task<bool> CreateShiftAsync(Shift shift);
-        Task<bool> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest);
-        Task<bool> DeleteShiftAsync(Guid id);
+        Task<IEnumerable<ShiftDto>> GetShiftsAsync();
+        Task<ShiftDto> GetShiftByIdAsync(Guid id);
+        Task<ShiftDto> CreateShiftAsync(CreateShiftRequest createShiftRequest);
+        Task<ShiftDto> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest);
+        Task<ShiftDto> DeleteShiftAsync(Guid id);
     }
 }

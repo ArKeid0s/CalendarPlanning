@@ -1,34 +1,75 @@
-﻿using CalendarPlanning.Server.Repositories.Interfaces;
+﻿using CalendarPlanning.Server.Data;
+using CalendarPlanning.Server.Mapper.ShiftModelMappers;
+using CalendarPlanning.Server.Repositories.Interfaces;
+using CalendarPlanning.Shared.Exceptions.ShiftExceptions;
 using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
+using CalendarPlanning.Shared.Models.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
 {
     public class ShiftsRepository : IShiftsRepository
     {
-        public Task<bool> CreateShiftAsync(Shift shift)
+        private readonly APIDbContext _dbContext;
+
+        private readonly ShiftToShiftDtoModelMapper _mapper = new();
+
+        public ShiftsRepository(APIDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
 
-        public Task<bool> DeleteShiftAsync(Guid id)
+        public async Task<ShiftDto> CreateShiftAsync(Shift shift)
         {
-            throw new NotImplementedException();
+            _dbContext.Shifts.Add(shift);
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map(shift);
         }
 
-        public Task<Shift?> GetShiftByIdAsync(Guid id)
+        public async Task<ShiftDto> DeleteShiftAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var shift = await _dbContext.Shifts
+                .FirstOrDefaultAsync(s => s.ShiftId == id)
+                ?? throw new ShiftNotFoundException(id);
+
+            _dbContext.Shifts.Remove(shift);
+            await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map(shift);
         }
 
-        public Task<IEnumerable<Shift>> GetShiftsAsync()
+        public async Task<ShiftDto> GetShiftByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var shift = await _dbContext.Shifts
+                .FirstOrDefaultAsync(s => s.ShiftId == id)
+                ?? throw new ShiftNotFoundException(id);
+
+            return _mapper.Map(shift);
         }
 
-        public Task<bool> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest)
+        public async Task<IEnumerable<ShiftDto>> GetShiftsAsync()
         {
-            throw new NotImplementedException();
+            var shifts = await _dbContext.Shifts
+                .ToListAsync();
+
+            return shifts.Select(_mapper.Map);
+        }
+
+        public async Task<ShiftDto> UpdateShiftAsync(Shift shift)
+        {
+            _dbContext.Shifts.Update(shift);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new ShiftSaveUpdateException(shift.ShiftId, ex.Message);
+            }
+
+            return _mapper.Map(shift);
         }
     }
 }
