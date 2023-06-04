@@ -1,7 +1,9 @@
 ﻿using CalendarPlanning.Server.Data;
 using CalendarPlanning.Server.Exceptions;
+using CalendarPlanning.Server.Mapper;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
+using CalendarPlanning.Shared.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
@@ -10,41 +12,53 @@ namespace CalendarPlanning.Server.Repositories
     {
         private readonly APIDbContext _dbContext;
 
+        private readonly StoreToStoreDtoModelMapper _mapper = new();
+
         public StoresRepository(APIDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<Store> CreateStoreAsync(Store store)
+        public async Task<StoreDto> CreateStoreAsync(Store store)
         {
             _dbContext.Stores.Add(store);
             await _dbContext.SaveChangesAsync();
 
-            return store;
+            return _mapper.MapToStoreDto(store); ;
         }
 
-        public async Task<Store> DeleteStoreAsync(Guid id)
+        public async Task<StoreDto> DeleteStoreAsync(Guid id)
         {
-            var store = await GetStoreByIdAsync(id) ?? throw new StoreNotFoundException(id);
+            var store = await _dbContext.Stores
+                .FirstOrDefaultAsync(s => s.StoreId == id)
+                ?? throw new StoreNotFoundException(id);
+
             _dbContext.Stores.Remove(store);
             await _dbContext.SaveChangesAsync();
 
-            return store;
+            return _mapper.MapToStoreDto(store);
         }
 
-        public async Task<Store> GetStoreByIdAsync(Guid id)
+        public async Task<StoreDto> GetStoreByIdAsync(Guid id)
         {
-            var store = await _dbContext.Stores.Include(s => s.Employees).FirstOrDefaultAsync(s => s.StoreId == id) ?? throw new StoreNotFoundException(id);
+            var store = await _dbContext.Stores
+                .Include(s => s.Employees)
+                .FirstOrDefaultAsync(s => s.StoreId == id)
+                ?? throw new StoreNotFoundException(id);
 
-            return store;
+            return _mapper.MapToStoreDto(store);
         }
 
-        public async Task<IEnumerable<Store>> GetStoresAsync()
+        public async Task<IEnumerable<StoreDto>> GetStoresAsync()
         {
-            return await _dbContext.Stores.ToListAsync();
+            var stores = await _dbContext.Stores
+                .Include(s => s.Employees)
+                .ToListAsync();
+
+            return stores.Select(_mapper.MapToStoreDto);
         }
 
-        public async Task<Store> UpdateStoreAsync(Store store)
+        public async Task<StoreDto> UpdateStoreAsync(Store store)
         {
             _dbContext.Stores.Update(store);
 
@@ -57,7 +71,7 @@ namespace CalendarPlanning.Server.Repositories
                 throw new StoreSaveUpdateException(store.StoreId, ex.Message);
             }
 
-            return store;
+            return _mapper.MapToStoreDto(store);
         }
     }
 }

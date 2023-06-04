@@ -52,7 +52,7 @@ namespace CalendarPlanning.Server.Controllers
 
         // POST api/<StoresController>
         [HttpPost]
-        public async Task<IActionResult> CreateStore([FromBody] AddStoreRequest addStoreRequest)
+        public async Task<IActionResult> CreateStore([FromBody] CreateStoreRequest addStoreRequest)
         {
             if (!ModelState.IsValid)
             {

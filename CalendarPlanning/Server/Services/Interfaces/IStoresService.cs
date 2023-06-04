@@ -1,14 +1,15 @@
 ﻿using CalendarPlanning.Shared.Models;
+using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {
     public interface IStoresService
     {
-        Task<IEnumerable<Store>> GetStoresAsync();
-        Task<Store> GetStoreByIdAsync(Guid id);
-        Task<Store> CreateStoreAsync(AddStoreRequest addStoreRequest);
-        Task<Store> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest);
-        Task<Store> DeleteStoreAsync(Guid id);
+        Task<IEnumerable<StoreDto>> GetStoresAsync();
+        Task<StoreDto> GetStoreByIdAsync(Guid id);
+        Task<StoreDto> CreateStoreAsync(CreateStoreRequest addStoreRequest);
+        Task<StoreDto> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest);
+        Task<StoreDto> DeleteStoreAsync(Guid id);
     }
 }
