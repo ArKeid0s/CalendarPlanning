@@ -1,10 +1,10 @@
-﻿using CalendarPlanning.Server.Exceptions;
-using CalendarPlanning.Server.Mapper;
+﻿using CalendarPlanning.Server.Mapper.EmployeeModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
+using CalendarPlanning.Shared.Exceptions.StoreExceptions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
-using CalendarPlanning.Shared.Models.Requests;
+using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
 
 namespace CalendarPlanning.Server.Services
 {
@@ -61,7 +61,7 @@ namespace CalendarPlanning.Server.Services
             var store = stores.FirstOrDefault(s => s.Name == updateEmployeeRequest.StoreName) ?? throw new StoreNotFoundException(updateEmployeeRequest.StoreName);
 
             var employeeDto = await _employeesRepository.GetEmployeeByIdAsync(id);
-            var employee = _mapper.MapToEmployee(employeeDto);
+            var employee = _mapper.Map(employeeDto);
 
             return await _employeesRepository.UpdateEmployeeAsync(employee);
         }

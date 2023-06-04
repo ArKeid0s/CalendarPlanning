@@ -1,6 +1,5 @@
-﻿using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.DTO;
-using CalendarPlanning.Shared.Models.Requests;
+﻿using CalendarPlanning.Shared.Models.DTO;
+using CalendarPlanning.Shared.Models.Requests.StoreRequests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {

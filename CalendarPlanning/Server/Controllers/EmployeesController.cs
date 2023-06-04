@@ -1,6 +1,7 @@
 ﻿using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
-using CalendarPlanning.Shared.Models.Requests;
+using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
+using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -52,7 +53,7 @@ namespace CalendarPlanning.Server.Controllers
 
         // POST api/<EmployeesController>
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeRequest addEmployeeRequest)
+        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeRequest createEmployeeRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +62,7 @@ namespace CalendarPlanning.Server.Controllers
 
             try
             {
-                var employee = await _employeesService.CreateEmployeeAsync(addEmployeeRequest);
+                var employee = await _employeesService.CreateEmployeeAsync(createEmployeeRequest);
                 return CreatedAtRoute("GetEmployeeById", new { id = employee.EmployeeId }, employee);
             }
             catch (InvalidRequestException ex)

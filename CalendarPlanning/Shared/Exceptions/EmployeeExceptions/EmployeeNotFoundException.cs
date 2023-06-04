@@ -1,4 +1,4 @@
-﻿namespace CalendarPlanning.Server.Exceptions
+﻿namespace CalendarPlanning.Shared.Exceptions.EmployeeExceptions
 {
     public class EmployeeNotFoundException : Exception
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CalendarPlanning.Shared.Models.Requests
+namespace CalendarPlanning.Shared.Models.Requests.StoreRequests
 {
     public class UpdateStoreRequest : RequestModelBase
     {

@@ -19,6 +19,5 @@ namespace CalendarPlanning.Shared.Models
         public required string Address { get; set; } = null!;
 
         public virtual ICollection<Employee>? Employees { get; set; }
-        public virtual ICollection<Schedule>? Schedules { get; set; }
     }
 }

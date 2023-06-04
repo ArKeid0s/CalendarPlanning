@@ -1,7 +1,7 @@
 ﻿using CalendarPlanning.Server.Data;
-using CalendarPlanning.Server.Exceptions;
-using CalendarPlanning.Server.Mapper;
+using CalendarPlanning.Server.Mapper.EmployeeModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
+using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +24,7 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Employees.Add(employee);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.MapToEmployeeDto(employee);
+            return _mapper.Map(employee);
         }
 
         public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
@@ -36,7 +36,7 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Employees.Remove(employee);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.MapToEmployeeDto(employee);
+            return _mapper.Map(employee);
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
@@ -46,7 +46,7 @@ namespace CalendarPlanning.Server.Repositories
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
                 ?? throw new EmployeeNotFoundException(employeeId);
 
-            return _mapper.MapToEmployeeDto(employee);
+            return _mapper.Map(employee);
         }
 
         public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync()
@@ -55,7 +55,7 @@ namespace CalendarPlanning.Server.Repositories
                 .Include(e => e.Store)
                 .ToListAsync();
 
-            return employees.Select(_mapper.MapToEmployeeDto);
+            return employees.Select(_mapper.Map);
         }
 
         public async Task<EmployeeDto> UpdateEmployeeAsync(Employee employee)
@@ -71,7 +71,7 @@ namespace CalendarPlanning.Server.Repositories
                 throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
             }
 
-            return _mapper.MapToEmployeeDto(employee);
+            return _mapper.Map(employee);
         }
     }
 }

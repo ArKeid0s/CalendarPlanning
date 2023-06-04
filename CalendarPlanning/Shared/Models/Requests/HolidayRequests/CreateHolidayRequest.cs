@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CalendarPlanning.Shared.Models.Requests
+namespace CalendarPlanning.Shared.Models.Requests.HolidayRequests
 {
-    public class UpdateHolidayRequest : RequestModelBase
+    public class CreateHolidayRequest : RequestModelBase
     {
         [Required]
         public Guid EmployeeId { get; set; }

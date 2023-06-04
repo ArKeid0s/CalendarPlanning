@@ -1,11 +1,10 @@
-﻿using CalendarPlanning.Server.Exceptions;
-using CalendarPlanning.Server.Mapper;
+﻿using CalendarPlanning.Server.Mapper.EmployeeModelMappers;
+using CalendarPlanning.Server.Mapper.StoreModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
-using CalendarPlanning.Shared.Models.Requests;
-using System.Collections;
+using CalendarPlanning.Shared.Models.Requests.StoreRequests;
 
 namespace CalendarPlanning.Server.Services
 {
@@ -28,7 +27,7 @@ namespace CalendarPlanning.Server.Services
             addStoreRequest.Validate();
 
             var employeesDto = await _employeesRepository.GetEmployeesAsync();
-            var employees = employeesDto.Select(_employeeMapper.MapToEmployee) as ICollection<Employee>;
+            var employees = employeesDto.Select(_employeeMapper.Map) as ICollection<Employee>;
 
             var store = new Store()
             {
@@ -66,7 +65,7 @@ namespace CalendarPlanning.Server.Services
             var employeesDto = await _employeesRepository.GetEmployeesAsync();
             var employees = employeesDto.Where(e => e.StoreId == id).ToList();
 
-            var store = _storeMapper.MapToStore(storeDto);
+            var store = _storeMapper.Map(storeDto);
 
             return await _storesRepository.UpdateStoreAsync(store);
         }

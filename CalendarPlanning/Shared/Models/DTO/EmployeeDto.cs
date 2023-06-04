@@ -8,5 +8,6 @@
         public Guid StoreId { get; set; }
         public required string StoreName { get; set; }
         public required string StoreAddress { get; set; }
+        public required List<ShiftDto>? Shifts { get; set; }
     }
 }

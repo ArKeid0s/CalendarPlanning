@@ -1,4 +1,4 @@
-﻿namespace CalendarPlanning.Server.Exceptions
+﻿namespace CalendarPlanning.Shared.Exceptions.StoreExceptions
 {
     public class StoreNotFoundException : Exception
     {

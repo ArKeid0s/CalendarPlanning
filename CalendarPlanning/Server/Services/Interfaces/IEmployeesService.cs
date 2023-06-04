@@ -1,5 +1,5 @@
 ﻿using CalendarPlanning.Shared.Models.DTO;
-using CalendarPlanning.Shared.Models.Requests;
+using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
 
 namespace CalendarPlanning.Server.Services.Interfaces
 {

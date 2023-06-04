@@ -1,6 +1,6 @@
 ﻿using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Models;
-using CalendarPlanning.Shared.Models.Requests;
+using CalendarPlanning.Shared.Models.Requests.HolidayRequests;
 
 namespace CalendarPlanning.Server.Repositories
 {

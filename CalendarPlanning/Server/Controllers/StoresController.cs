@@ -1,6 +1,7 @@
 ﻿using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
-using CalendarPlanning.Shared.Models.Requests;
+using CalendarPlanning.Shared.Exceptions.StoreExceptions;
+using CalendarPlanning.Shared.Models.Requests.StoreRequests;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
