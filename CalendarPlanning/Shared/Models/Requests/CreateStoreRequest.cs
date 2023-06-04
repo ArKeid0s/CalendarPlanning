@@ -2,7 +2,7 @@
 
 namespace CalendarPlanning.Shared.Models.Requests
 {
-    public class AddStoreRequest : RequestModelBase
+    public class CreateStoreRequest : RequestModelBase
     {
         [Required]
         [MaxLength(50)]

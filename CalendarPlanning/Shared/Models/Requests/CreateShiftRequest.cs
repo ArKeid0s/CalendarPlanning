@@ -2,7 +2,7 @@
 
 namespace CalendarPlanning.Shared.Models.Requests
 {
-    public class AddShiftRequest : RequestModelBase
+    public class CreateShiftRequest : RequestModelBase
     {
         [Required]
         public Guid EmployeeId { get; set; }
