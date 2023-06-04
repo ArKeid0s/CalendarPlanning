@@ -29,7 +29,10 @@ namespace CalendarPlanning.Server.Repositories
 
         public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
         {
-            var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.EmployeeId == id) ?? throw new EmployeeNotFoundException(id);
+            var employee = await _dbContext.Employees
+                .FirstOrDefaultAsync(e => e.EmployeeId == id)
+                ?? throw new EmployeeNotFoundException(id);
+
             _dbContext.Employees.Remove(employee);
             await _dbContext.SaveChangesAsync();
 
@@ -48,7 +51,9 @@ namespace CalendarPlanning.Server.Repositories
 
         public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync()
         {
-            var employees = await _dbContext.Employees.Include(e => e.Store).ToListAsync();
+            var employees = await _dbContext.Employees
+                .Include(e => e.Store)
+                .ToListAsync();
 
             return employees.Select(_mapper.MapToEmployeeDto);
         }
