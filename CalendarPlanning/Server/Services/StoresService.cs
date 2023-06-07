@@ -2,6 +2,7 @@
 using CalendarPlanning.Server.Mapper.StoreModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
+using CalendarPlanning.Shared.Exceptions.StoreExceptions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests.StoreRequests;

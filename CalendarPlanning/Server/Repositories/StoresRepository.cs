@@ -1,6 +1,7 @@
 ﻿using CalendarPlanning.Server.Data;
 using CalendarPlanning.Server.Mapper.StoreModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
+using CalendarPlanning.Shared.Exceptions.StoreExceptions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -48,9 +49,30 @@ namespace CalendarPlanning.Server.Repositories
             return _mapper.Map(store);
         }
 
+        public async Task<StoreDto> GetStoreByIdAsNoTrackingAsync(Guid id)
+        {
+            var store = await _dbContext.Stores
+                .AsNoTracking()
+                .Include(s => s.Employees)
+                .FirstOrDefaultAsync(s => s.StoreId == id)
+                ?? throw new StoreNotFoundException(id);
+
+            return _mapper.Map(store);
+        }
+
         public async Task<IEnumerable<StoreDto>> GetStoresAsync()
         {
             var stores = await _dbContext.Stores
+                .Include(s => s.Employees)
+                .ToListAsync();
+
+            return stores.Select(_mapper.Map);
+        }
+
+        public async Task<IEnumerable<StoreDto>> GetStoresAsNoTrackingAsync()
+        {
+            var stores = await _dbContext.Stores
+                .AsNoTracking()
                 .Include(s => s.Employees)
                 .ToListAsync();
 
