@@ -1,6 +1,7 @@
 ﻿using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
+using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -115,6 +116,32 @@ namespace CalendarPlanning.Server.Controllers
             catch (EmployeeNotFoundException)
             {
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut("{id:guid}/AddShiftToEmployee")]
+        public async Task<IActionResult> AddShiftToEmployee(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
+        {
+            try
+            {
+                await _employeesService.AddShiftToEmployeeAsync(id, addShiftToEmployeeRequest);
+                return NoContent();
+            }
+            catch (EmployeeNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (EmployeeSaveUpdateException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

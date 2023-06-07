@@ -43,6 +43,19 @@ namespace CalendarPlanning.Server.Repositories
         {
             var employee = await _dbContext.Employees
                 .Include(e => e.Store)
+                .Include(e => e.Shifts)
+                .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
+                ?? throw new EmployeeNotFoundException(employeeId);
+
+            return _mapper.Map(employee);
+        }
+
+        public async Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(Guid employeeId)
+        {
+            var employee = await _dbContext.Employees
+                .AsNoTracking()
+                .Include(e => e.Store)
+                .Include(e => e.Shifts)
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
                 ?? throw new EmployeeNotFoundException(employeeId);
 
@@ -53,6 +66,18 @@ namespace CalendarPlanning.Server.Repositories
         {
             var employees = await _dbContext.Employees
                 .Include(e => e.Store)
+                .Include(e => e.Shifts)
+                .ToListAsync();
+
+            return employees.Select(_mapper.Map);
+        }
+
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsNoTrackingAsync()
+        {
+            var employees = await _dbContext.Employees
+                .AsNoTracking()
+                .Include(e => e.Store)
+                .Include(e => e.Shifts)
                 .ToListAsync();
 
             return employees.Select(_mapper.Map);

@@ -10,5 +10,6 @@ namespace CalendarPlanning.Server.Services.Interfaces
         Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest);
         Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest);
         Task<EmployeeDto> DeleteEmployeeAsync(Guid id);
+        Task<EmployeeDto> AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest);
     }
 }
