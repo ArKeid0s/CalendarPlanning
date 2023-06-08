@@ -9,3 +9,4 @@
 - un employé peut avoir plusieurs magasins ? NON
 - 1 employé a des emplois du temps = ensemble de shifts différents ou identiques par jour
 - entité schedule vraiment pertinente ?
+- si supprime store alors employé supprimé
