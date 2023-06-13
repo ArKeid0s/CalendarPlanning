@@ -1,3 +1,4 @@
+using CalendarPlanning.Server.Authorization;
 using CalendarPlanning.Server.Data;
 using Microsoft.OpenApi.Models;
 
@@ -17,6 +18,11 @@ builder.Services.AddSwaggerGen(c =>
 // === DATABASE ===
 builder.Services.AddRepositories<APIDbContext>().AddServices();
 // === DATABASE ===
+
+// === AUTHENTICATION ===
+builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthorizationPolicies();
+// === AUTHENTICATION ===
 
 var app = builder.Build();
 

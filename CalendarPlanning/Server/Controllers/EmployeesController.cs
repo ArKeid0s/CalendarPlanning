@@ -1,7 +1,9 @@
-﻿using CalendarPlanning.Server.Exceptions;
+﻿using CalendarPlanning.Server.Authorization;
+using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
 using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -33,6 +35,7 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // GET: api/<EmployeesController>/{id}
+        [Authorize(Policy =Policies.ReadAccess)]
         [HttpGet("{id:guid}", Name = "GetEmployeeById")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -51,6 +54,7 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // POST api/<EmployeesController>
+        [Authorize(Policy =Policies.WriteAccess)]
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeRequest createEmployeeRequest)
         {
@@ -76,6 +80,7 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // PUT api/<EmployeesController>/5
+        [Authorize(Policy = Policies.WriteAccess)]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
@@ -108,6 +113,7 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // DELETE api/<EmployeesController>/5
+        [Authorize(Policy = Policies.WriteAccess)]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -126,6 +132,7 @@ namespace CalendarPlanning.Server.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.WriteAccess)]
         [HttpPut("{id:guid}/AddShiftToEmployee")]
         public async Task<IActionResult> AddShiftToEmployee(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
         {
