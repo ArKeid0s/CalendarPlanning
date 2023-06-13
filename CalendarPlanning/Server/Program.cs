@@ -1,9 +1,4 @@
 using CalendarPlanning.Server.Data;
-using CalendarPlanning.Server.Repositories;
-using CalendarPlanning.Server.Repositories.Interfaces;
-using CalendarPlanning.Server.Services;
-using CalendarPlanning.Server.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,47 +14,11 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "CalendarPlanning", Version = "v1" });
 });
 
-
-
 // === DATABASE ===
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
-var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "CalendarPlanning";
-var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "sa";
-var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? "Password123";
-var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID={dbUser};Password={dbPassword};TrustServerCertificate=True";
-builder.Services.AddDbContext<APIDbContext>(
-    options => {
-        options.UseSqlServer(connectionString);
-        options.EnableSensitiveDataLogging();
-    });
-//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddRepositories<APIDbContext>().AddServices();
 // === DATABASE ===
-
-
-
-// === INJECTION ===
-
-// --- Repositories ---
-builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
-builder.Services.AddScoped<IHolidaysRepository, HolidaysRepository>();
-builder.Services.AddScoped<ISchedulesRepository, SchedulesRepository>();
-builder.Services.AddScoped<IShiftsRepository, ShiftsRepository>();
-builder.Services.AddScoped<IStoresRepository, StoresRepository>();
-
-// --- Services ---
-builder.Services.AddScoped<IEmployeesService, EmployeesService>();
-builder.Services.AddScoped<IHolidaysService, HolidaysService>();
-builder.Services.AddScoped<ISchedulesService, SchedulesService>();
-builder.Services.AddScoped<IShiftsService, ShiftsService>();
-builder.Services.AddScoped<IStoresService, StoresService>();
-
-// === INJECTION ===
-
-
 
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -68,6 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
          c.SwaggerEndpoint("/swagger/v1/swagger.json", "CalendarPlanning v1"));
+    await app.Services.InitializeDatabaseAsync<APIDbContext>();
 }
 else
 {
