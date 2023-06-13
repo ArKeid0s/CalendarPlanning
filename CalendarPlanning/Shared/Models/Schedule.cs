@@ -10,11 +10,9 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ScheduleId { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime")]
         public required DateTime WeekStart { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime")]
         public required DateTime WeekEnd { get; set; }
 

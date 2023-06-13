@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CalendarPlanning.Shared.Models.DTO;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CalendarPlanning.Shared.Models
@@ -10,13 +11,11 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid StoreId { get; set; }
 
-        [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public required string Name { get; set; } = null!;
+        public required string Name { get; set; }
 
-        [Required]
         [Column(TypeName = "nvarchar(200)")]
-        public required string Address { get; set; } = null!;
+        public required string Address { get; set; }
 
         public virtual ICollection<Employee>? Employees { get; set; }
     }

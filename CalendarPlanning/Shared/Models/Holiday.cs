@@ -10,11 +10,9 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid HolidayId { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime")]
         public required DateTime StartDate { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime")]
         public required DateTime EndDate { get; set; }
 

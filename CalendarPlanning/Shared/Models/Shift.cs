@@ -11,15 +11,12 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ShiftId { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime")]
         public required DateTime HourStart { get; set; }
 
-        [Required]
         [Column(TypeName = "datetime")]
         public required DateTime HourEnd { get; set; }
 
-        [Required]
         public required ShiftTypesEnum ShiftType { get; set; }
     }
 }
