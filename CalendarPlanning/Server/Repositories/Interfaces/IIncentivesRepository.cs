@@ -8,7 +8,7 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
         Task<IEnumerable<IncentiveDto>> GetIncentivesAsNoTrackingAsync();
         Task<IncentiveDto> GetIncentiveByIdAsNoTrackingAsync(Guid id);
         Task<IncentiveDto> CreateIncentiveAsync(Incentive incentive);
-        Task<IncentiveDto> UpdateIncentiveAsync(Incentive incentive);
-        Task<IncentiveDto> DeleteIncentiveAsync(Guid id);
+        Task UpdateIncentiveAsync(Incentive incentive);
+        Task DeleteIncentiveAsync(Guid id);
     }
 }

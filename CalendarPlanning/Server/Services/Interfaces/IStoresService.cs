@@ -8,7 +8,7 @@ namespace CalendarPlanning.Server.Services.Interfaces
         Task<IEnumerable<StoreDto>> GetStoresAsync();
         Task<StoreDto> GetStoreByIdAsync(Guid id);
         Task<StoreDto> CreateStoreAsync(CreateStoreRequest addStoreRequest);
-        Task<StoreDto> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest);
-        Task<StoreDto> DeleteStoreAsync(Guid id);
+        Task UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest);
+        Task DeleteStoreAsync(Guid id);
     }
 }

@@ -36,9 +36,9 @@ namespace CalendarPlanning.Server.Services
             return await _incentivesRepository.CreateIncentiveAsync(incentive);
         }
 
-        public async Task<IncentiveDto> DeleteIncentiveAsync(Guid id)
+        public async Task DeleteIncentiveAsync(Guid id)
         {
-            return await _incentivesRepository.DeleteIncentiveAsync(id);
+            await _incentivesRepository.DeleteIncentiveAsync(id);
         }
 
         public async Task<IncentiveDto> GetIncentiveByIdAsync(Guid id)
@@ -51,7 +51,7 @@ namespace CalendarPlanning.Server.Services
             return await _incentivesRepository.GetIncentivesAsNoTrackingAsync();
         }
 
-        public async Task<IncentiveDto> UpdateIncentiveAsync(Guid id, UpdateIncentiveRequest updateIncentiveRequest)
+        public async Task UpdateIncentiveAsync(Guid id, UpdateIncentiveRequest updateIncentiveRequest)
         {
             var incentiveDto = await _incentivesRepository.GetIncentiveByIdAsNoTrackingAsync(id) ?? throw new IncentiveNotFoundException(id);
             incentiveDto.ClientFirstName = updateIncentiveRequest.ClientFirstName;
@@ -61,7 +61,7 @@ namespace CalendarPlanning.Server.Services
 
             var incentive = incentiveDto.ToModel();
 
-            return await _incentivesRepository.UpdateIncentiveAsync(incentive);
+            await _incentivesRepository.UpdateIncentiveAsync(incentive);
         }
     }
 }

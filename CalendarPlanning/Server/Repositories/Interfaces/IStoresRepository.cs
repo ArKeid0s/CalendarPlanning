@@ -10,7 +10,7 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
         Task<IEnumerable<StoreDto>> GetStoresAsNoTrackingAsync();
         Task<StoreDto> GetStoreByIdAsNoTrackingAsync(Guid id);
         Task<StoreDto> CreateStoreAsync(Store store);
-        Task<StoreDto> UpdateStoreAsync(Store store);
-        Task<StoreDto> DeleteStoreAsync(Guid id);
+        Task UpdateStoreAsync(Store store);
+        Task DeleteStoreAsync(Guid id);
     }
 }

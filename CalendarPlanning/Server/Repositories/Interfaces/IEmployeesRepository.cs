@@ -10,7 +10,7 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsNoTrackingAsync();
         Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(Guid id);
         Task<EmployeeDto> CreateEmployeeAsync(Employee employee);
-        Task<EmployeeDto> UpdateEmployeeAsync(Employee employee);
-        Task<EmployeeDto> DeleteEmployeeAsync(Guid id);
+        Task UpdateEmployeeAsync(Employee employee);
+        Task DeleteEmployeeAsync(Guid id);
     }
 }

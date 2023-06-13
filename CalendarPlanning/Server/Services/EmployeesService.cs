@@ -20,7 +20,7 @@ namespace CalendarPlanning.Server.Services
             _storesRepository = storesRepository;
         }
 
-        public async Task<EmployeeDto> AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
+        public async Task AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
         {
             var employeeDto = await _employeesRepository.GetEmployeeByIdAsNoTrackingAsync(id);
             
@@ -49,7 +49,7 @@ namespace CalendarPlanning.Server.Services
 
             }
 
-            return await _employeesRepository.UpdateEmployeeAsync(employee);
+            await _employeesRepository.UpdateEmployeeAsync(employee);
         }
 
         public async Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest)
@@ -67,9 +67,9 @@ namespace CalendarPlanning.Server.Services
             return await _employeesRepository.CreateEmployeeAsync(employee);
         }
 
-        public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
+        public async Task DeleteEmployeeAsync(Guid id)
         {
-            return await _employeesRepository.DeleteEmployeeAsync(id);
+            await _employeesRepository.DeleteEmployeeAsync(id);
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid id)
@@ -82,7 +82,7 @@ namespace CalendarPlanning.Server.Services
             return await _employeesRepository.GetEmployeesAsync();
         }
 
-        public async Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        public async Task UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             var stores = await _storesRepository.GetStoresAsNoTrackingAsync();
             var store = stores.FirstOrDefault(s => s.Name == updateEmployeeRequest.StoreName) ?? throw new StoreNotFoundException(updateEmployeeRequest.StoreName);
@@ -94,7 +94,7 @@ namespace CalendarPlanning.Server.Services
 
             var employee = employeeDto.ToModel();
 
-            return await _employeesRepository.UpdateEmployeeAsync(employee);
+            await _employeesRepository.UpdateEmployeeAsync(employee);
         }
     }
 }

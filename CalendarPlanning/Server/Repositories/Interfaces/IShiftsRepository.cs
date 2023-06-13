@@ -10,7 +10,7 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
         Task<ShiftDto> GetShiftByIdAsync(Guid id);
         Task<ShiftDto> GetShiftByIdAsNoTrackingAsync(Guid id);
         Task<ShiftDto> CreateShiftAsync(Shift shift);
-        Task<ShiftDto> UpdateShiftAsync(Shift shift);
-        Task<ShiftDto> DeleteShiftAsync(Guid id);
+        Task UpdateShiftAsync(Shift shift);
+        Task DeleteShiftAsync(Guid id);
     }
 }

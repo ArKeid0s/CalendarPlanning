@@ -8,7 +8,7 @@ namespace CalendarPlanning.Server.Services.Interfaces
         Task<IEnumerable<ShiftDto>> GetShiftsAsync();
         Task<ShiftDto> GetShiftByIdAsync(Guid id);
         Task<ShiftDto> CreateShiftAsync(CreateShiftRequest createShiftRequest);
-        Task<ShiftDto> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest);
-        Task<ShiftDto> DeleteShiftAsync(Guid id);
+        Task UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest);
+        Task DeleteShiftAsync(Guid id);
     }
 }

@@ -25,16 +25,12 @@ namespace CalendarPlanning.Server.Repositories
             return employee.ToDto();
         }
 
-        public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
+        public async Task DeleteEmployeeAsync(Guid id)
         {
-            var employee = await _dbContext.Employees
-                .FirstOrDefaultAsync(e => e.EmployeeId == id)
-                ?? throw new EmployeeNotFoundException(id);
+            var result = await _dbContext.Employees.Where(e => e.EmployeeId == id)
+                .ExecuteDeleteAsync();
 
-            _dbContext.Employees.Remove(employee);
-            await _dbContext.SaveChangesAsync();
-
-            return employee.ToDto();
+            if (result == 0) throw new EmployeeNotFoundException(id);
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
@@ -81,7 +77,7 @@ namespace CalendarPlanning.Server.Repositories
             return employees.Select(e => e.ToDto());
         }
 
-        public async Task<EmployeeDto> UpdateEmployeeAsync(Employee employee)
+        public async Task UpdateEmployeeAsync(Employee employee)
         {
             _dbContext.Employees.Update(employee);
 
@@ -93,8 +89,6 @@ namespace CalendarPlanning.Server.Repositories
             {
                 throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
             }
-
-            return employee.ToDto();
         }
     }
 }

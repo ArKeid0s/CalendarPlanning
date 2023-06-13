@@ -25,16 +25,12 @@ namespace CalendarPlanning.Server.Repositories
             return incentive.ToDto();
         }
 
-        public async Task<IncentiveDto> DeleteIncentiveAsync(Guid id)
+        public async Task DeleteIncentiveAsync(Guid id)
         {
-            var incentive = await _dbContext.Incentives
-                .FirstOrDefaultAsync(i => i.IncentiveId == id)
-                ?? throw new IncentiveNotFoundException(id);
+            var result = await _dbContext.Incentives.Where(i => i.IncentiveId == id)
+                .ExecuteDeleteAsync();
 
-            _dbContext.Incentives.Remove(incentive);
-            await _dbContext.SaveChangesAsync();
-
-            return incentive.ToDto();
+            if (result == 0) throw new IncentiveNotFoundException(id);
         }
 
         public async Task<IncentiveDto> GetIncentiveByIdAsNoTrackingAsync(Guid id)
@@ -56,7 +52,7 @@ namespace CalendarPlanning.Server.Repositories
             return incentives.Select(i => i.ToDto());
         }
 
-        public async Task<IncentiveDto> UpdateIncentiveAsync(Incentive incentive)
+        public async Task UpdateIncentiveAsync(Incentive incentive)
         {
             _dbContext.Incentives.Update(incentive);
 
@@ -68,8 +64,6 @@ namespace CalendarPlanning.Server.Repositories
             {
                 throw new IncentiveSaveUpdateException(incentive.IncentiveId, ex.Message);
             }
-
-            return incentive.ToDto();
         }
     }
 }

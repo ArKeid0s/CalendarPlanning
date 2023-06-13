@@ -8,8 +8,8 @@ namespace CalendarPlanning.Server.Services.Interfaces
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
         Task<EmployeeDto> GetEmployeeByIdAsync(Guid id);
         Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest);
-        Task<EmployeeDto> UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest);
-        Task<EmployeeDto> DeleteEmployeeAsync(Guid id);
-        Task<EmployeeDto> AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest);
+        Task UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest);
+        Task DeleteEmployeeAsync(Guid id);
+        Task AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest);
     }
 }
