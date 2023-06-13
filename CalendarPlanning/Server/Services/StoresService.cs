@@ -1,8 +1,7 @@
-﻿using CalendarPlanning.Server.Mapper.EmployeeModelMappers;
-using CalendarPlanning.Server.Mapper.StoreModelMappers;
-using CalendarPlanning.Server.Repositories.Interfaces;
+﻿using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Exceptions.StoreExceptions;
+using CalendarPlanning.Shared.ModelExtensions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests.StoreRequests;
@@ -14,9 +13,6 @@ namespace CalendarPlanning.Server.Services
         private readonly IStoresRepository _storesRepository;
         private readonly IEmployeesRepository _employeesRepository;
 
-        private readonly EmployeeDtoToEmployeeModelMapper _employeeMapper = new();
-        private readonly StoreDtoToStoreModelMapper _storeMapper = new();
-
         public StoresService(IStoresRepository storesRepository, IEmployeesRepository employeesRepository)
         {
             _storesRepository = storesRepository;
@@ -25,10 +21,8 @@ namespace CalendarPlanning.Server.Services
 
         public async Task<StoreDto> CreateStoreAsync(CreateStoreRequest addStoreRequest)
         {
-            addStoreRequest.Validate();
-
             var employeesDto = await _employeesRepository.GetEmployeesAsync();
-            var employees = employeesDto.Select(_employeeMapper.Map) as ICollection<Employee>;
+            var employees = employeesDto.Select(e => e.ToModel()) as ICollection<Employee>;
 
             var store = new Store()
             {
@@ -47,26 +41,24 @@ namespace CalendarPlanning.Server.Services
 
         public async Task<StoreDto> GetStoreByIdAsync(Guid id)
         {
-            return await _storesRepository.GetStoreByIdAsync(id);
+            return await _storesRepository.GetStoreByIdAsNoTrackingAsync(id);
         }
 
         public Task<IEnumerable<StoreDto>> GetStoresAsync()
         {
-            return _storesRepository.GetStoresAsync();
+            return _storesRepository.GetStoresAsNoTrackingAsync();
         }
 
         public async Task<StoreDto> UpdateStoreAsync(Guid id, UpdateStoreRequest updateStoreRequest)
         {
-            updateStoreRequest.Validate();
-
-            var storeDto = await _storesRepository.GetStoreByIdAsync(id) ?? throw new StoreNotFoundException(id);
+            var storeDto = await _storesRepository.GetStoreByIdAsNoTrackingAsync(id) ?? throw new StoreNotFoundException(id);
             storeDto.Name = updateStoreRequest.Name;
             storeDto.Address = updateStoreRequest.Address;
 
-            var employeesDto = await _employeesRepository.GetEmployeesAsync();
+            var employeesDto = await _employeesRepository.GetEmployeesAsNoTrackingAsync();
             var employees = employeesDto.Where(e => e.StoreId == id).ToList();
 
-            var store = _storeMapper.Map(storeDto);
+            var store = storeDto.ToModel();
 
             return await _storesRepository.UpdateStoreAsync(store);
         }

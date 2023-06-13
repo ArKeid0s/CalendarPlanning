@@ -1,7 +1,7 @@
 ﻿using CalendarPlanning.Server.Data;
-using CalendarPlanning.Server.Mapper.ShiftModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Exceptions.ShiftExceptions;
+using CalendarPlanning.Shared.ModelExtensions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +11,6 @@ namespace CalendarPlanning.Server.Repositories
     public class ShiftsRepository : IShiftsRepository
     {
         private readonly APIDbContext _dbContext;
-
-        private readonly ShiftToShiftDtoModelMapper _mapper = new();
 
         public ShiftsRepository(APIDbContext dbContext)
         {
@@ -24,7 +22,7 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Shifts.Add(shift);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.Map(shift);
+            return shift.ToDto();
         }
 
         public async Task<ShiftDto> DeleteShiftAsync(Guid id)
@@ -36,7 +34,17 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Shifts.Remove(shift);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.Map(shift);
+            return shift.ToDto();
+        }
+
+        public async Task<ShiftDto> GetShiftByIdAsNoTrackingAsync(Guid id)
+        {
+            var shift = await _dbContext.Shifts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.ShiftId == id)
+                ?? throw new ShiftNotFoundException(id);
+
+            return shift.ToDto();
         }
 
         public async Task<ShiftDto> GetShiftByIdAsync(Guid id)
@@ -45,7 +53,16 @@ namespace CalendarPlanning.Server.Repositories
                 .FirstOrDefaultAsync(s => s.ShiftId == id)
                 ?? throw new ShiftNotFoundException(id);
 
-            return _mapper.Map(shift);
+            return shift.ToDto();
+        }
+
+        public async Task<IEnumerable<ShiftDto>> GetShiftsAsNoTrackingAsync()
+        {
+            var shifts = await _dbContext.Shifts
+                .AsNoTracking()
+                .ToListAsync();
+
+            return shifts.Select(s => s.ToDto());
         }
 
         public async Task<IEnumerable<ShiftDto>> GetShiftsAsync()
@@ -53,7 +70,7 @@ namespace CalendarPlanning.Server.Repositories
             var shifts = await _dbContext.Shifts
                 .ToListAsync();
 
-            return shifts.Select(_mapper.Map);
+            return shifts.Select(s => s.ToDto());
         }
 
         public async Task<ShiftDto> UpdateShiftAsync(Shift shift)
@@ -69,7 +86,7 @@ namespace CalendarPlanning.Server.Repositories
                 throw new ShiftSaveUpdateException(shift.ShiftId, ex.Message);
             }
 
-            return _mapper.Map(shift);
+            return shift.ToDto();
         }
     }
 }

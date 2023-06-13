@@ -75,6 +75,11 @@ namespace CalendarPlanning.Server.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateShift(Guid id, UpdateShiftRequest updateShiftRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 await _shiftService.UpdateShiftAsync(id, updateShiftRequest);

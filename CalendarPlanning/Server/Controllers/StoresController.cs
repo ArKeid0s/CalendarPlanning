@@ -79,10 +79,15 @@ namespace CalendarPlanning.Server.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateStore(Guid id, UpdateStoreRequest updateStoreRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-            await _storesService.UpdateStoreAsync(id, updateStoreRequest);
-            return NoContent();
+                await _storesService.UpdateStoreAsync(id, updateStoreRequest);
+                return NoContent();
             }
             catch (StoreNotFoundException)
             {

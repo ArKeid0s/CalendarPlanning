@@ -1,7 +1,6 @@
 ﻿using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
-using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -39,8 +38,7 @@ namespace CalendarPlanning.Server.Controllers
         {
             try
             {
-                var employee = await _employeesService.GetEmployeeByIdAsync(id);
-                return Ok(employee);
+                return Ok(await _employeesService.GetEmployeeByIdAsync(id));
             }
             catch (EmployeeNotFoundException)
             {
@@ -81,6 +79,11 @@ namespace CalendarPlanning.Server.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 await _employeesService.UpdateEmployeeAsync(id, updateEmployeeRequest);
@@ -126,6 +129,11 @@ namespace CalendarPlanning.Server.Controllers
         [HttpPut("{id:guid}/AddShiftToEmployee")]
         public async Task<IActionResult> AddShiftToEmployee(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 await _employeesService.AddShiftToEmployeeAsync(id, addShiftToEmployeeRequest);

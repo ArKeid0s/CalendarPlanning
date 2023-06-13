@@ -1,7 +1,7 @@
 ﻿using CalendarPlanning.Server.Data;
-using CalendarPlanning.Server.Mapper.EmployeeModelMappers;
 using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
+using CalendarPlanning.Shared.ModelExtensions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +11,6 @@ namespace CalendarPlanning.Server.Repositories
     public class EmployeesRepository : IEmployeesRepository
     {
         private readonly APIDbContext _dbContext;
-
-        private readonly EmployeeToEmployeeDtoModelMapper _mapper = new();
 
         public EmployeesRepository(APIDbContext dbContext)
         {
@@ -24,7 +22,7 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Employees.Add(employee);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.Map(employee);
+            return employee.ToDto();
         }
 
         public async Task<EmployeeDto> DeleteEmployeeAsync(Guid id)
@@ -36,7 +34,7 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Employees.Remove(employee);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.Map(employee);
+            return employee.ToDto();
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
@@ -47,7 +45,7 @@ namespace CalendarPlanning.Server.Repositories
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
                 ?? throw new EmployeeNotFoundException(employeeId);
 
-            return _mapper.Map(employee);
+            return employee.ToDto();
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(Guid employeeId)
@@ -59,7 +57,7 @@ namespace CalendarPlanning.Server.Repositories
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
                 ?? throw new EmployeeNotFoundException(employeeId);
 
-            return _mapper.Map(employee);
+            return employee.ToDto();
         }
 
         public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync()
@@ -69,7 +67,7 @@ namespace CalendarPlanning.Server.Repositories
                 .Include(e => e.Shifts)
                 .ToListAsync();
 
-            return employees.Select(_mapper.Map);
+            return employees.Select(e => e.ToDto());
         }
 
         public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsNoTrackingAsync()
@@ -80,7 +78,7 @@ namespace CalendarPlanning.Server.Repositories
                 .Include(e => e.Shifts)
                 .ToListAsync();
 
-            return employees.Select(_mapper.Map);
+            return employees.Select(e => e.ToDto());
         }
 
         public async Task<EmployeeDto> UpdateEmployeeAsync(Employee employee)
@@ -96,7 +94,7 @@ namespace CalendarPlanning.Server.Repositories
                 throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
             }
 
-            return _mapper.Map(employee);
+            return employee.ToDto();
         }
     }
 }

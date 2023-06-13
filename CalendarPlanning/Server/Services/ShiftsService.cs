@@ -1,6 +1,6 @@
-﻿using CalendarPlanning.Server.Mapper.ShiftModelMappers;
-using CalendarPlanning.Server.Repositories.Interfaces;
+﻿using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Services.Interfaces;
+using CalendarPlanning.Shared.ModelExtensions;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.DTO;
 using CalendarPlanning.Shared.Models.Requests.ShiftRequests;
@@ -11,8 +11,6 @@ namespace CalendarPlanning.Server.Services
     {
         private readonly IShiftsRepository _shiftsRepository;
 
-        private readonly ShiftDtoToShiftModelMapper _mapper = new();
-
         public ShiftsService(IShiftsRepository shiftsRepository) 
         {
             _shiftsRepository = shiftsRepository;
@@ -20,8 +18,6 @@ namespace CalendarPlanning.Server.Services
 
         public async Task<ShiftDto> CreateShiftAsync(CreateShiftRequest createShiftRequest)
         {
-            createShiftRequest.Validate();
-
             var shift = new Shift()
             {
                 HourStart = createShiftRequest.HourStart,
@@ -39,20 +35,22 @@ namespace CalendarPlanning.Server.Services
 
         public async Task<ShiftDto> GetShiftByIdAsync(Guid id)
         {
-            return await _shiftsRepository.GetShiftByIdAsync(id);
+            return await _shiftsRepository.GetShiftByIdAsNoTrackingAsync(id);
         }
 
         public async Task<IEnumerable<ShiftDto>> GetShiftsAsync()
         {
-            return await _shiftsRepository.GetShiftsAsync();
+            return await _shiftsRepository.GetShiftsAsNoTrackingAsync();
         }
 
         public async Task<ShiftDto> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest)
         {
-            updateShiftRequest.Validate();
+            var shiftDto = await _shiftsRepository.GetShiftByIdAsNoTrackingAsync(id);
+            shiftDto.HourStart = updateShiftRequest.HourStart;
+            shiftDto.HourEnd = updateShiftRequest.HourEnd;
+            shiftDto.ShiftType = updateShiftRequest.ShiftType;
 
-            var shiftDto = await _shiftsRepository.GetShiftByIdAsync(id);
-            var shift = _mapper.Map(shiftDto);
+            var shift = shiftDto.ToModel();
 
             return await _shiftsRepository.UpdateShiftAsync(shift);
         }
