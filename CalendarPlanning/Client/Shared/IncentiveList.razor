@@ -1,0 +1,46 @@
+﻿@using CalendarPlanning.Shared.Enums;
+@using CalendarPlanning.Shared.Models.DTO;
+@using Microsoft.AspNetCore.Components.QuickGrid;
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+@if (incentives is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="grid" tabindex="-1">
+        <QuickGrid Items="incentives.AsQueryable()" Virtualize="true">
+            <TemplateColumn Title="Client" SortBy="@sortByName">
+                <div class="flex items-center">
+                    <p><span class="text-uppercase">@context.ClientLastName</span> @context.ClientFirstName</p>
+                </div>
+            </TemplateColumn>
+            <PropertyColumn Title="Incentive Unifocal" Property="i => i.IncentiveUnifocal" />
+            <PropertyColumn Title="Incentive Progressive" Property="i => i.IncentiveProgressive" />
+        </QuickGrid>
+    </div>
+
+}
+
+
+@code {
+    private List<IncentiveDto>? incentives;
+
+    GridSort<IncentiveDto> sortByName = GridSort<IncentiveDto>
+        .ByAscending(p => p.ClientLastName)
+        .ThenAscending(p => p.ClientFirstName);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadIncentives();
+    }
+
+    public async Task LoadIncentives()
+    {
+        incentives = await Http.GetFromJsonAsync<List<IncentiveDto>>("api/Incentives");
+        StateHasChanged();
+        Console.WriteLine("Incentives loaded");
+    }
+}

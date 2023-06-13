@@ -1,0 +1,12 @@
+﻿@page "/incentives"
+
+<h3>Incentive</h3>
+
+<CreateIncentive OnIncentiveCreated="RefreshIncentives" />
+<IncentiveList @ref="incentiveList" />
+
+@code {
+    private IncentiveList incentiveList = null!;
+
+    private async Task RefreshIncentives() => await incentiveList.LoadIncentives();
+}
