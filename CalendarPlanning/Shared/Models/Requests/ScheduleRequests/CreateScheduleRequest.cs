@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CalendarPlanning.Shared.Models.Requests
+namespace CalendarPlanning.Shared.Models.Requests.ScheduleRequests
 {
-    public class CreateScheduleRequest : RequestModelBase
+    public class CreateScheduleRequest
     {
         [Required]
         public Guid StoreId { get; set; }

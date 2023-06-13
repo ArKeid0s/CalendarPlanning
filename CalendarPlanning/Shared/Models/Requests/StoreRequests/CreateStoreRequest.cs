@@ -2,14 +2,14 @@
 
 namespace CalendarPlanning.Shared.Models.Requests.StoreRequests
 {
-    public class CreateStoreRequest : RequestModelBase
+    public class CreateStoreRequest
     {
         [Required]
-        [MaxLength(50)]
+        [StringLength(50)]
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(200)]
+        [StringLength(200)]
         public string Address { get; set; } = string.Empty;
     }
 }

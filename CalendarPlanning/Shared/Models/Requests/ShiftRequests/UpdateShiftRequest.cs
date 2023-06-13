@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CalendarPlanning.Shared.Models.Requests.ShiftRequests
 {
-    public class UpdateShiftRequest : RequestModelBase
+    public class UpdateShiftRequest
     {
         [Required]
         public DateTime HourStart { get; set; }

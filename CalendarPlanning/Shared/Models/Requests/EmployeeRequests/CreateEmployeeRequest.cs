@@ -2,17 +2,18 @@
 
 namespace CalendarPlanning.Shared.Models.Requests.EmployeeRequests
 {
-    public class CreateEmployeeRequest : RequestModelBase
+    public class CreateEmployeeRequest
     {
         [Required]
-        [MaxLength(50)]
+        [StringLength(50)]
         public required string FirstName { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [StringLength(50)]
         public required string LastName { get; set; }
 
         [Required]
+        [StringLength(100)]
         public required string StoreName { get; set; }
     }
 }

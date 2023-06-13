@@ -2,7 +2,7 @@
 
 namespace CalendarPlanning.Shared.Models.Requests.HolidayRequests
 {
-    public class UpdateHolidayRequest : RequestModelBase
+    public class UpdateHolidayRequest
     {
         [Required]
         public Guid EmployeeId { get; set; }
