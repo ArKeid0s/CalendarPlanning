@@ -11,10 +11,12 @@ namespace CalendarPlanning.Server.Repositories
     public class EmployeesRepository : IEmployeesRepository
     {
         private readonly APIDbContext _dbContext;
+        private readonly ILogger<EmployeesRepository> _logger;
 
-        public EmployeesRepository(APIDbContext dbContext)
+        public EmployeesRepository(APIDbContext dbContext, ILogger<EmployeesRepository> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<EmployeeDto> CreateEmployeeAsync(Employee employee)
@@ -22,7 +24,11 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext.Employees.Add(employee);
             await _dbContext.SaveChangesAsync();
 
-            return employee.ToDto();
+            var employeeDto = employee.ToDto();
+
+            _logger.LogInformation("Employee created: {Employee}", employeeDto);
+
+            return employeeDto;
         }
 
         public async Task DeleteEmployeeAsync(Guid id)
@@ -31,6 +37,8 @@ namespace CalendarPlanning.Server.Repositories
                 .ExecuteDeleteAsync();
 
             if (result == 0) throw new EmployeeNotFoundException(id);
+
+            _logger.LogInformation("Employee deleted: {EmployeeId}", id);
         }
 
         public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
@@ -84,6 +92,7 @@ namespace CalendarPlanning.Server.Repositories
             try
             {
                 await _dbContext.SaveChangesAsync();
+                _logger.LogInformation("Employee updated: {Employee}", employee);
             }
             catch (DbUpdateException ex)
             {
