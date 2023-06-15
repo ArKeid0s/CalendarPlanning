@@ -25,16 +25,12 @@ namespace CalendarPlanning.Server.Repositories
             return store.ToDto();
         }
 
-        public async Task<StoreDto> DeleteStoreAsync(Guid id)
+        public async Task DeleteStoreAsync(Guid id)
         {
-            var store = await _dbContext.Stores
-                .FirstOrDefaultAsync(s => s.StoreId == id)
-                ?? throw new StoreNotFoundException(id);
+            var result = await _dbContext.Stores.Where(s => s.StoreId == id)
+                .ExecuteDeleteAsync();
 
-            _dbContext.Stores.Remove(store);
-            await _dbContext.SaveChangesAsync();
-
-            return store.ToDto();
+            if (result == 0) throw new StoreNotFoundException(id);
         }
 
         public async Task<StoreDto> GetStoreByIdAsync(Guid id)
@@ -77,7 +73,7 @@ namespace CalendarPlanning.Server.Repositories
             return stores.Select(s => s.ToDto());
         }
 
-        public async Task<StoreDto> UpdateStoreAsync(Store store)
+        public async Task UpdateStoreAsync(Store store)
         {
             _dbContext.Stores.Update(store);
 
@@ -89,8 +85,6 @@ namespace CalendarPlanning.Server.Repositories
             {
                 throw new StoreSaveUpdateException(store.StoreId, ex.Message);
             }
-
-            return store.ToDto();
         }
     }
 }

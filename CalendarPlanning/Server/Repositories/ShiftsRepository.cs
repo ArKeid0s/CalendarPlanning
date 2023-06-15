@@ -25,16 +25,12 @@ namespace CalendarPlanning.Server.Repositories
             return shift.ToDto();
         }
 
-        public async Task<ShiftDto> DeleteShiftAsync(Guid id)
+        public async Task DeleteShiftAsync(Guid id)
         {
-            var shift = await _dbContext.Shifts
-                .FirstOrDefaultAsync(s => s.ShiftId == id)
-                ?? throw new ShiftNotFoundException(id);
+            var result = await _dbContext.Shifts.Where(s => s.ShiftId == id)
+                .ExecuteDeleteAsync();
 
-            _dbContext.Shifts.Remove(shift);
-            await _dbContext.SaveChangesAsync();
-
-            return shift.ToDto();
+            if (result == 0) throw new ShiftNotFoundException(id);
         }
 
         public async Task<ShiftDto> GetShiftByIdAsNoTrackingAsync(Guid id)
@@ -73,7 +69,7 @@ namespace CalendarPlanning.Server.Repositories
             return shifts.Select(s => s.ToDto());
         }
 
-        public async Task<ShiftDto> UpdateShiftAsync(Shift shift)
+        public async Task UpdateShiftAsync(Shift shift)
         {
             _dbContext.Shifts.Update(shift);
 
@@ -85,8 +81,6 @@ namespace CalendarPlanning.Server.Repositories
             {
                 throw new ShiftSaveUpdateException(shift.ShiftId, ex.Message);
             }
-
-            return shift.ToDto();
         }
     }
 }

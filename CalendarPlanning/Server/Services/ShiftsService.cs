@@ -28,9 +28,9 @@ namespace CalendarPlanning.Server.Services
             return await _shiftsRepository.CreateShiftAsync(shift);
         }
 
-        public async Task<ShiftDto> DeleteShiftAsync(Guid id)
+        public async Task DeleteShiftAsync(Guid id)
         {
-            return await _shiftsRepository.DeleteShiftAsync(id);
+            await _shiftsRepository.DeleteShiftAsync(id);
         }
 
         public async Task<ShiftDto> GetShiftByIdAsync(Guid id)
@@ -43,7 +43,7 @@ namespace CalendarPlanning.Server.Services
             return await _shiftsRepository.GetShiftsAsNoTrackingAsync();
         }
 
-        public async Task<ShiftDto> UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest)
+        public async Task UpdateShiftAsync(Guid id, UpdateShiftRequest updateShiftRequest)
         {
             var shiftDto = await _shiftsRepository.GetShiftByIdAsNoTrackingAsync(id);
             shiftDto.HourStart = updateShiftRequest.HourStart;
@@ -52,7 +52,7 @@ namespace CalendarPlanning.Server.Services
 
             var shift = shiftDto.ToModel();
 
-            return await _shiftsRepository.UpdateShiftAsync(shift);
+            await _shiftsRepository.UpdateShiftAsync(shift);
         }
     }
 }
