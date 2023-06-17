@@ -1,5 +1,6 @@
 using CalendarPlanning.Server.Authorization;
 using CalendarPlanning.Server.Data;
+using CalendarPlanning.Server.Middleware;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,10 @@ builder.Services.AddAuthorizationPolicies();
 // === AUTHENTICATION ===
 
 var app = builder.Build();
+
+// === MIDDLEWARE ===
+app.UseMiddleware<RequestTimingMiddleware>();
+// === MIDDLEWARE ===
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
