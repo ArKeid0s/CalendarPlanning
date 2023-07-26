@@ -1,16 +1,15 @@
 ﻿using CalendarPlanning.Shared.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CalendarPlanning.Server.Data
 {
-    public class APIDbContext : DbContext
+    public class APIDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
         public APIDbContext(DbContextOptions<APIDbContext> options) : base(options)
         {
         }
-
 
         public DbSet<Employee> Employees => Set<Employee>();
         //public DbSet<Holiday> Holidays { get; set; } = null!;

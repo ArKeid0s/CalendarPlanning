@@ -44,7 +44,7 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // GET: api/<EmployeesController>/{id}
-        [Authorize(Policy =Policies.ReadAccess)]
+        [Authorize(Policy =Policies.ConcernedUser)]
         [HttpGet("{id:guid}", Name = "GetEmployeeById")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -52,10 +52,10 @@ namespace CalendarPlanning.Server.Controllers
             {
                 return Ok(await _employeesService.GetEmployeeByIdAsync(id));
             }
-            catch (EmployeeNotFoundException)
+            catch (EmployeeNotFoundException ex)
             {
                 _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
-                return NotFound();
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

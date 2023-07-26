@@ -17,6 +17,8 @@ services:
         - DB_HOST=sql_server_db
         - DB_NAME=CalendarPlanning
         - DB_SA_PASSWORD=Adminpwd99!
+        - ADMIN_EMAIL=admin@example.com
+        - ADMIN_PASSWORD=AdminUserpwd99!
     
 
 

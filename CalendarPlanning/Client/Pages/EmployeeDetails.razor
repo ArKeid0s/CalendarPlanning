@@ -6,14 +6,22 @@
 
 <h3>Employee Details for Employee with Id @EmployeeId</h3>
 
-@if (employee is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <p>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</p>
-}
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        @if (employee is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <p>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</p>
+        }
+    </Authorized>
+
+    <NotAuthorized>
+        <p>You are not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private EmployeeDto? employee;
@@ -23,6 +31,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        employee = await Http.GetFromJsonAsync<EmployeeDto>($"api/Employees/{EmployeeId}");
+        try
+        {
+            employee = await Http.GetFromJsonAsync<EmployeeDto>($"api/Employees/{EmployeeId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

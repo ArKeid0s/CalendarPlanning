@@ -1,0 +1,64 @@
+﻿@page "/login"
+@using CalendarPlanning.Shared.Models.Requests.AuthenticationRequests;
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavigationManager
+
+<h1>Login</h1>
+
+@if (showErrorMessage)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@errorMessage</p>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Please enter your details</h5>
+        <EditForm Model="loginUserRequest" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <InputText id="email" class="form-control" @bind-Value="loginUserRequest.Email" />
+                <ValidationMessage For="@(() => loginUserRequest.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="loginUserRequest.Password" />
+                <ValidationMessage For="@(() => loginUserRequest.Password)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">@buttonLabel</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginUserRequest loginUserRequest = new LoginUserRequest();
+    private bool showErrorMessage = false;
+    private string errorMessage = string.Empty;
+    private bool isSubmitting = false;
+    private string buttonLabel => isSubmitting ? "Loading..." : "Login";
+
+    private async Task HandleLogin()
+    {
+        showErrorMessage = false;
+        isSubmitting = true;
+
+        var result = await AuthService.Login(loginUserRequest);
+
+        if (result.Succeeded)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = result.ErrorMessage;
+            showErrorMessage = true;
+        }
+
+        isSubmitting = false;
+    }
+}
