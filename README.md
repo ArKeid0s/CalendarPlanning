@@ -3,6 +3,7 @@
 [![wakatime](https://wakatime.com/badge/github/ArKeid0s/CalendarPlanning.svg)](https://wakatime.com/badge/github/ArKeid0s/CalendarPlanning)
 
 ## TODO
+- [ ] dans incentive si admin mettre un filtre pour afficher seulement les incentives de certains employés
 - [ ] dans employee service faire verification seulement 2 shifts et 1 de chaque type seulement
 
 ## Questions
