@@ -1,7 +1,8 @@
 ﻿@using CalendarPlanning.Shared.Enums;
 @using CalendarPlanning.Shared.Models.Requests.IncentiveRequests;
+@using System.Security.Claims;
 @inject HttpClient Http
-@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>Create Incentive</h3>
 
@@ -30,14 +31,6 @@
         <EnumInput id="incentiveProgressive" class="form-select" @bind-Value="@createIncentiveRequest.IncentiveProgressive" />
     </div>
 
-    <!-- If EmployeeId is a user input, use InputText for it.
-         If not, set it manually in the HandleValidSubmit method. -->
-    <div>
-        <label for="employeeId">Employee Id:</label>
-        <InputText id="employeeId" @bind-Value="employeeId" />
-        <ValidationMessage For="@(() => createIncentiveRequest.EmployeeId)" />
-    </div>
-
     <button type="submit">Create Incentive</button>
 </EditForm>
 
@@ -46,18 +39,21 @@
     public EventCallback OnIncentiveCreated { get; set; }
 
     private CreateIncentiveRequest createIncentiveRequest = new();
-    private string? employeeId;
 
     private async Task HandleValidSubmit()
     {
-        // TODO: set employeeId to the current user's ID
-        if (employeeId is not null) createIncentiveRequest.EmployeeId = new Guid(employeeId);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity!.IsAuthenticated)
+        {
+            createIncentiveRequest.EmployeeId = user.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        }
+
         var response = await Http.PostAsJsonAsync("/api/Incentives", createIncentiveRequest);
 
         if (response.IsSuccessStatusCode)
         {
-            // Optionally navigate to another page
-            //NavigationManager.NavigateTo("/");
             await OnIncentiveCreated.InvokeAsync();
         }
         else

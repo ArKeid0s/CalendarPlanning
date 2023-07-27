@@ -6,6 +6,7 @@ namespace CalendarPlanning.Server.Services.Interfaces
     public interface IIncentivesService
     {
         Task<IEnumerable<IncentiveDto>> GetIncentivesAsync();
+        Task<IEnumerable<IncentiveDto>> GetIncentivesOfUserById(string userId);
         Task<IncentiveDto> GetIncentiveByIdAsync(Guid id);
         Task<IncentiveDto> CreateIncentiveAsync(CreateIncentiveRequest createIncentiveRequest);
         Task UpdateIncentiveAsync(Guid id, UpdateIncentiveRequest updateIncentiveRequest);

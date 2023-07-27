@@ -23,6 +23,6 @@ namespace CalendarPlanning.Shared.Models
 
         [ForeignKey("EmployeeId")]
         public virtual Employee? Employee { get; set; }
-        public Guid EmployeeId { get; set; }
+        public required string EmployeeId { get; set; }
     }
 }

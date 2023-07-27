@@ -1,7 +1,10 @@
-﻿using CalendarPlanning.Server.Exceptions;
+﻿using CalendarPlanning.Server.Authorization;
+using CalendarPlanning.Server.Exceptions;
 using CalendarPlanning.Server.Services.Interfaces;
+using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
 using CalendarPlanning.Shared.Exceptions.IncentiveExceptions;
 using CalendarPlanning.Shared.Models.Requests.IncentiveRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -31,8 +34,26 @@ namespace CalendarPlanning.Server.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.ConcernedUser)]
+        [HttpGet("IncentivesOfUser/{id}", Name = "GetIncentivesOfUser")]
+        public async Task<IActionResult> GetIncentivesOfUserById(string id)
+        {
+            try
+            {
+                return Ok(await _incentivesService.GetIncentivesOfUserById(id));
+            }
+            catch (EmployeeNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
         //add get with filter from query for employeeId
-        
+
         [HttpGet("{id:guid}", Name = "GetIncentiveById")]
         public async Task<IActionResult> Get(Guid id)
         {

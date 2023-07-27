@@ -51,6 +51,14 @@ namespace CalendarPlanning.Server.Services
             return await _incentivesRepository.GetIncentivesAsNoTrackingAsync();
         }
 
+        public async Task<IEnumerable<IncentiveDto>> GetIncentivesOfUserById(string userId)
+        {
+            var incentives = await _incentivesRepository.GetIncentivesAsNoTrackingAsync();
+
+            return incentives.Where(incentive => incentive.EmployeeId == userId);
+        }
+
+
         public async Task UpdateIncentiveAsync(Guid id, UpdateIncentiveRequest updateIncentiveRequest)
         {
             var incentiveDto = await _incentivesRepository.GetIncentiveByIdAsNoTrackingAsync(id) ?? throw new IncentiveNotFoundException(id);

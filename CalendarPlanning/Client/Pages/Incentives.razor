@@ -1,5 +1,7 @@
 ﻿@page "/incentives"
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <h3>Incentive</h3>
 
 <CreateIncentive OnIncentiveCreated="RefreshIncentives" />
@@ -7,6 +9,18 @@
 
 @code {
     private IncentiveList incentiveList = null!;
+    private bool isAdmin = false;
 
-    private async Task RefreshIncentives() => await incentiveList.LoadIncentives();
+    private async Task RefreshIncentives() => await incentiveList.LoadIncentives(isAdmin);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity!.IsAuthenticated)
+        {
+            isAdmin = user.IsInRole("Admin");
+        }
+    }
 }

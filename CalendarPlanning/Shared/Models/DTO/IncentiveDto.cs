@@ -9,6 +9,6 @@ namespace CalendarPlanning.Shared.Models.DTO
         public required string ClientLastName { get; set; }
         public IncentiveTypeEnum IncentiveUnifocal { get; set; }
         public IncentiveTypeEnum IncentiveProgressive { get; set; }
-        public required Guid EmployeeId { get; set; }
+        public required string EmployeeId { get; set; }
     }
 }

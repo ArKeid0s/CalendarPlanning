@@ -1,8 +1,9 @@
 ﻿@using CalendarPlanning.Shared.Enums;
 @using CalendarPlanning.Shared.Models.DTO;
 @using Microsoft.AspNetCore.Components.QuickGrid;
+@using System.Security.Claims;
 @inject HttpClient Http
-@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (incentives is null)
 {
@@ -27,6 +28,7 @@ else
 
 @code {
     private List<IncentiveDto>? incentives;
+    private string userId = string.Empty;
 
     GridSort<IncentiveDto> sortByName = GridSort<IncentiveDto>
         .ByAscending(p => p.ClientLastName)
@@ -34,13 +36,27 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadIncentives();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity!.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            await LoadIncentives(user.IsInRole("Admin"));
+        }
     }
 
-    public async Task LoadIncentives()
+    public async Task LoadIncentives(bool isAdmin)
     {
-        incentives = await Http.GetFromJsonAsync<List<IncentiveDto>>("api/Incentives");
+        if (isAdmin) {
+            incentives = await Http.GetFromJsonAsync<List<IncentiveDto>>("api/Incentives");
+        }
+        else
+        {
+            incentives = await Http.GetFromJsonAsync<List<IncentiveDto>>($"api/Incentives/IncentivesOfUser/{userId}");
+        }
+
         StateHasChanged();
-        Console.WriteLine("Incentives loaded");
     }
 }
