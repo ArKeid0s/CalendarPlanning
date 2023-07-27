@@ -6,10 +6,10 @@ namespace CalendarPlanning.Server.Services.Interfaces
     public interface IEmployeesService
     {
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
-        Task<EmployeeDto> GetEmployeeByIdAsync(Guid id);
+        Task<EmployeeDto> GetEmployeeByIdAsync(string id);
         Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest);
-        Task UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest);
-        Task DeleteEmployeeAsync(Guid id);
-        Task AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest);
+        Task UpdateEmployeeAsync(string id, UpdateEmployeeRequest updateEmployeeRequest);
+        Task DeleteEmployeeAsync(string id);
+        Task AddShiftToEmployeeAsync(string id, AddShiftToEmployeeRequest addShiftToEmployeeRequest);
     }
 }

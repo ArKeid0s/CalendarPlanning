@@ -1,6 +1,7 @@
 ﻿using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Shared.Models;
 using CalendarPlanning.Shared.Models.Requests.AuthenticationRequests;
+using CalendarPlanning.Shared.Models.Requests.EmployeeRequests;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,6 +12,13 @@ namespace CalendarPlanning.Server.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly IEmployeesService _employeesService;
+
+        public AuthenticationService(IEmployeesService employeesService)
+        {
+            _employeesService = employeesService;
+        }
+
         public async Task<LoginResult> LoginUserAsync(LoginUserRequest loginUserRequest, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
         {
             var result = await signInManager.PasswordSignInAsync(loginUserRequest.Email, loginUserRequest.Password, false, false);
@@ -44,7 +52,8 @@ namespace CalendarPlanning.Server.Services
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, loginUserRequest.Email)
+                new Claim(ClaimTypes.Name, loginUserRequest.Email),
+                new Claim(ClaimTypes.NameIdentifier, user!.Id)
             };
 
             foreach (var role in roles)
@@ -57,7 +66,7 @@ namespace CalendarPlanning.Server.Services
                         claims.Add(new Claim("scope", "Calendar:Read"));
                         claims.Add(new Claim("scope", "Calendar:Write"));
                         break;
-                    case "User":
+                    case "Employee":
                         claims.Add(new Claim("scope", "Calendar:Read"));
                         break;
                 }
@@ -94,7 +103,16 @@ namespace CalendarPlanning.Server.Services
                 return new RegisterResult { Succeeded = false, ErrorMessage = $"User registration failed. Details: {errors}" };
             }
 
-            await userManager.AddToRoleAsync(newUser, "User");
+            await userManager.AddToRoleAsync(newUser, "Employee");
+
+            // Create employee
+            await _employeesService.CreateEmployeeAsync(new CreateEmployeeRequest
+            {
+                EmployeeId = newUser.Id,
+                FirstName = registerUserRequest.FirstName,
+                LastName = registerUserRequest.LastName,
+                StoreName = registerUserRequest.StoreName,
+            });
 
             return new RegisterResult { Succeeded = true };
         }

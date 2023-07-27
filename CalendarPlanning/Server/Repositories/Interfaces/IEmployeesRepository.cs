@@ -6,11 +6,11 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
     public interface IEmployeesRepository
     {
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
-        Task<EmployeeDto> GetEmployeeByIdAsync(Guid id);
+        Task<EmployeeDto> GetEmployeeByIdAsync(string id);
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsNoTrackingAsync();
-        Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(Guid id);
+        Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(string id);
         Task<EmployeeDto> CreateEmployeeAsync(Employee employee);
         Task UpdateEmployeeAsync(Employee employee);
-        Task DeleteEmployeeAsync(Guid id);
+        Task DeleteEmployeeAsync(string id);
     }
 }

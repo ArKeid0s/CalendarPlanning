@@ -35,5 +35,9 @@
     <ProjectReference Include="..\Shared\CalendarPlanning.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 
 </Project>

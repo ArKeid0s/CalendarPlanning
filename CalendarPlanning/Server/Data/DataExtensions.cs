@@ -26,7 +26,7 @@ namespace CalendarPlanning.Server.Data
                 .AddScoped<IEmployeesRepository, EmployeesRepository>()
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
                 .AddScoped<ISchedulesRepository, SchedulesRepository>()
-                .AddScoped<IShiftsRepository, ShiftsRepository>()
+                //.AddScoped<IShiftsRepository, ShiftsRepository>()
                 .AddScoped<IStoresRepository, StoresRepository>()
                 .AddScoped<IIncentivesRepository, IncentivesRepository>();
 
@@ -40,7 +40,7 @@ namespace CalendarPlanning.Server.Data
                 .AddScoped<IEmployeesService, EmployeesService>()
                 .AddScoped<IHolidaysService, HolidaysService>()
                 .AddScoped<ISchedulesService, SchedulesService>()
-                .AddScoped<IShiftsService, ShiftsService>()
+                //.AddScoped<IShiftsService, ShiftsService>()
                 .AddScoped<IStoresService, StoresService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IIncentivesService, IncentivesService>();

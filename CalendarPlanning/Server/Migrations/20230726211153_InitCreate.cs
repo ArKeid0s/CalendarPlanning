@@ -1,15 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace CalendarPlanning.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Init_Auth : Migration
+    public partial class InitCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -47,6 +51,20 @@ namespace CalendarPlanning.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stores",
+                schema: "dbo",
+                columns: table => new
+                {
+                    StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(200)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stores", x => x.StoreId);
                 });
 
             migrationBuilder.CreateTable(
@@ -155,6 +173,52 @@ namespace CalendarPlanning.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                schema: "dbo",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
+                    table.ForeignKey(
+                        name: "FK_Employees_Stores_StoreId",
+                        column: x => x.StoreId,
+                        principalSchema: "dbo",
+                        principalTable: "Stores",
+                        principalColumn: "StoreId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Incentives",
+                schema: "dbo",
+                columns: table => new
+                {
+                    IncentiveId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClientFirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    ClientLastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    IncentiveUnifocal = table.Column<int>(type: "int", nullable: false),
+                    IncentiveProgressive = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Incentives", x => x.IncentiveId);
+                    table.ForeignKey(
+                        name: "FK_Incentives_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalSchema: "dbo",
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -193,6 +257,18 @@ namespace CalendarPlanning.Server.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_StoreId",
+                schema: "dbo",
+                table: "Employees",
+                column: "StoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Incentives_EmployeeId",
+                schema: "dbo",
+                table: "Incentives",
+                column: "EmployeeId");
         }
 
         /// <inheritdoc />
@@ -214,10 +290,22 @@ namespace CalendarPlanning.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Incentives",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Employees",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Stores",
+                schema: "dbo");
         }
     }
 }

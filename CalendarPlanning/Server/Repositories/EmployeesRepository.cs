@@ -31,33 +31,33 @@ namespace CalendarPlanning.Server.Repositories
             return employeeDto;
         }
 
-        public async Task DeleteEmployeeAsync(Guid id)
+        public async Task DeleteEmployeeAsync(string employeeId)
         {
-            var result = await _dbContext.Employees.Where(e => e.EmployeeId == id)
+            var result = await _dbContext.Employees.Where(e => e.EmployeeId == employeeId)
                 .ExecuteDeleteAsync();
 
-            if (result == 0) throw new EmployeeNotFoundException(id);
+            if (result == 0) throw new EmployeeNotFoundException(employeeId);
 
-            _logger.LogInformation("Employee deleted: {EmployeeId}", id);
+            _logger.LogInformation("Employee deleted: {EmployeeId}", employeeId);
         }
 
-        public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(string employeeId)
         {
             var employee = await _dbContext.Employees
                 .Include(e => e.Store)
-                .Include(e => e.Shifts)
+                //.Include(e => e.Shifts)
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
                 ?? throw new EmployeeNotFoundException(employeeId);
 
             return employee.ToDto();
         }
 
-        public async Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(Guid employeeId)
+        public async Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(string employeeId)
         {
             var employee = await _dbContext.Employees
                 .AsNoTracking()
                 .Include(e => e.Store)
-                .Include(e => e.Shifts)
+                //.Include(e => e.Shifts)
                 .FirstOrDefaultAsync(e => e.EmployeeId == employeeId)
                 ?? throw new EmployeeNotFoundException(employeeId);
 
@@ -68,7 +68,7 @@ namespace CalendarPlanning.Server.Repositories
         {
             var employees = await _dbContext.Employees
                 .Include(e => e.Store)
-                .Include(e => e.Shifts)
+                //.Include(e => e.Shifts)
                 .ToListAsync();
 
             return employees.Select(e => e.ToDto());
@@ -79,7 +79,7 @@ namespace CalendarPlanning.Server.Repositories
             var employees = await _dbContext.Employees
                 .AsNoTracking()
                 .Include(e => e.Store)
-                .Include(e => e.Shifts)
+                //.Include(e => e.Shifts)
                 .ToListAsync();
 
             return employees.Select(e => e.ToDto());

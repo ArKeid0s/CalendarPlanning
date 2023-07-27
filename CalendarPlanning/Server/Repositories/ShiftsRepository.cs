@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarPlanning.Server.Repositories
 {
-    public class ShiftsRepository : IShiftsRepository
+    public class ShiftsRepository //: IShiftsRepository
     {
         private readonly APIDbContext _dbContext;
 
@@ -17,70 +17,70 @@ namespace CalendarPlanning.Server.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<ShiftDto> CreateShiftAsync(Shift shift)
-        {
-            _dbContext.Shifts.Add(shift);
-            await _dbContext.SaveChangesAsync();
+        //public async Task<ShiftDto> CreateShiftAsync(Shift shift)
+        //{
+        //    _dbContext.Shifts.Add(shift);
+        //    await _dbContext.SaveChangesAsync();
 
-            return shift.ToDto();
-        }
+        //    return shift.ToDto();
+        //}
 
-        public async Task DeleteShiftAsync(Guid id)
-        {
-            var result = await _dbContext.Shifts.Where(s => s.ShiftId == id)
-                .ExecuteDeleteAsync();
+        //public async Task DeleteShiftAsync(Guid id)
+        //{
+        //    var result = await _dbContext.Shifts.Where(s => s.ShiftId == id)
+        //        .ExecuteDeleteAsync();
 
-            if (result == 0) throw new ShiftNotFoundException(id);
-        }
+        //    if (result == 0) throw new ShiftNotFoundException(id);
+        //}
 
-        public async Task<ShiftDto> GetShiftByIdAsNoTrackingAsync(Guid id)
-        {
-            var shift = await _dbContext.Shifts
-                .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.ShiftId == id)
-                ?? throw new ShiftNotFoundException(id);
+        //public async Task<ShiftDto> GetShiftByIdAsNoTrackingAsync(Guid id)
+        //{
+        //    var shift = await _dbContext.Shifts
+        //        .AsNoTracking()
+        //        .FirstOrDefaultAsync(s => s.ShiftId == id)
+        //        ?? throw new ShiftNotFoundException(id);
 
-            return shift.ToDto();
-        }
+        //    return shift.ToDto();
+        //}
 
-        public async Task<ShiftDto> GetShiftByIdAsync(Guid id)
-        {
-            var shift = await _dbContext.Shifts
-                .FirstOrDefaultAsync(s => s.ShiftId == id)
-                ?? throw new ShiftNotFoundException(id);
+        //public async Task<ShiftDto> GetShiftByIdAsync(Guid id)
+        //{
+        //    var shift = await _dbContext.Shifts
+        //        .FirstOrDefaultAsync(s => s.ShiftId == id)
+        //        ?? throw new ShiftNotFoundException(id);
 
-            return shift.ToDto();
-        }
+        //    return shift.ToDto();
+        //}
 
-        public async Task<IEnumerable<ShiftDto>> GetShiftsAsNoTrackingAsync()
-        {
-            var shifts = await _dbContext.Shifts
-                .AsNoTracking()
-                .ToListAsync();
+        //public async Task<IEnumerable<ShiftDto>> GetShiftsAsNoTrackingAsync()
+        //{
+        //    var shifts = await _dbContext.Shifts
+        //        .AsNoTracking()
+        //        .ToListAsync();
 
-            return shifts.Select(s => s.ToDto());
-        }
+        //    return shifts.Select(s => s.ToDto());
+        //}
 
-        public async Task<IEnumerable<ShiftDto>> GetShiftsAsync()
-        {
-            var shifts = await _dbContext.Shifts
-                .ToListAsync();
+        //public async Task<IEnumerable<ShiftDto>> GetShiftsAsync()
+        //{
+        //    var shifts = await _dbContext.Shifts
+        //        .ToListAsync();
 
-            return shifts.Select(s => s.ToDto());
-        }
+        //    return shifts.Select(s => s.ToDto());
+        //}
 
-        public async Task UpdateShiftAsync(Shift shift)
-        {
-            _dbContext.Shifts.Update(shift);
+        //public async Task UpdateShiftAsync(Shift shift)
+        //{
+        //    _dbContext.Shifts.Update(shift);
 
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new ShiftSaveUpdateException(shift.ShiftId, ex.Message);
-            }
-        }
+        //    try
+        //    {
+        //        await _dbContext.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        throw new ShiftSaveUpdateException(shift.ShiftId, ex.Message);
+        //    }
+        //}
     }
 }

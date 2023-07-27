@@ -45,8 +45,8 @@ namespace CalendarPlanning.Server.Controllers
 
         // GET: api/<EmployeesController>/{id}
         [Authorize(Policy =Policies.ConcernedUser)]
-        [HttpGet("{id:guid}", Name = "GetEmployeeById")]
-        public async Task<IActionResult> Get(Guid id)
+        [HttpGet("{id}", Name = "GetEmployeeById")]
+        public async Task<IActionResult> Get(string id)
         {
             try
             {
@@ -107,8 +107,8 @@ namespace CalendarPlanning.Server.Controllers
 
         // PUT api/<EmployeesController>/5
         [Authorize(Policy = Policies.WriteAccess)]
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEmployee(string id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -151,8 +151,8 @@ namespace CalendarPlanning.Server.Controllers
 
         // DELETE api/<EmployeesController>/5
         [Authorize(Policy = Policies.WriteAccess)]
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
             try
             {
@@ -178,8 +178,8 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         [Authorize(Policy = Policies.WriteAccess)]
-        [HttpPut("{id:guid}/AddShiftToEmployee")]
-        public async Task<IActionResult> AddShiftToEmployee(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
+        [HttpPut("{id}/AddShiftToEmployee")]
+        public async Task<IActionResult> AddShiftToEmployee(string id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
         {
             if (!ModelState.IsValid)
             {

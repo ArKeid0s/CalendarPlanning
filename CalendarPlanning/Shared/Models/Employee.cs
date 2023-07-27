@@ -7,8 +7,8 @@ namespace CalendarPlanning.Shared.Models
     public class Employee
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid EmployeeId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public required string EmployeeId { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         public required string FirstName { get; set; }
@@ -20,7 +20,7 @@ namespace CalendarPlanning.Shared.Models
         public virtual Store? Store { get; set; }
         public Guid StoreId { get; set; }
 
-        public virtual ICollection<Shift>? Shifts { get; set; }
-        public virtual ICollection<Holiday>? Holidays { get; set; }
+        //public virtual ICollection<Shift>? Shifts { get; set; }
+        //public virtual ICollection<Holiday>? Holidays { get; set; }
     }
 }

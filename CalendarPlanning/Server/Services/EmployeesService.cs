@@ -20,36 +20,38 @@ namespace CalendarPlanning.Server.Services
             _storesRepository = storesRepository;
         }
 
-        public async Task AddShiftToEmployeeAsync(Guid id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
+        public Task AddShiftToEmployeeAsync(string id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
         {
-            var employeeDto = await _employeesRepository.GetEmployeeByIdAsNoTrackingAsync(id);
+            throw new NotImplementedException();
+        //    var employeeDto = await _employeesRepository.GetEmployeeByIdAsNoTrackingAsync(id);
             
-            var existingShift = employeeDto.Shifts?.FirstOrDefault(s => s.ShiftType == addShiftToEmployeeRequest.ShiftType);
+        //    var existingShift = employeeDto.Shifts?.FirstOrDefault(s => s.ShiftType == addShiftToEmployeeRequest.ShiftType);
 
-            var employee = employeeDto.ToModel();
+        //    var employee = employeeDto.ToModel();
 
-            if (existingShift != null)
-            {
-                var shiftToUpdate = (employee.Shifts?.FirstOrDefault(s => s.ShiftId == existingShift.ShiftId)) ?? throw new ShiftNotFoundException(existingShift.ShiftId);
-                shiftToUpdate.HourStart = addShiftToEmployeeRequest.HourStart;
-                shiftToUpdate.HourEnd = addShiftToEmployeeRequest.HourEnd;
-                // TODO: tracking problem, will not be saved
-            }
-            else
-            {
-                var newShift = new Shift
-                {
-                    ShiftType = addShiftToEmployeeRequest.ShiftType,
-                    HourStart = addShiftToEmployeeRequest.HourStart,
-                    HourEnd = addShiftToEmployeeRequest.HourEnd
-                };
+        //    if (existingShift != null)
+        //    {
+        //        var shiftToUpdate = (employee.Shifts?.FirstOrDefault(s => s.ShiftId == existingShift.ShiftId)) ?? throw new ShiftNotFoundException(existingShift.ShiftId);
+        //        shiftToUpdate.HourStart = addShiftToEmployeeRequest.HourStart;
+        //        shiftToUpdate.HourEnd = addShiftToEmployeeRequest.HourEnd;
+        //        // TODO: tracking problem, will not be saved
+        //    }
+        //    else
+        //    {
+        //        var newShift = new Shift
+        //        {
+        //            EmployeeId = employee.EmployeeId,
+        //            ShiftType = addShiftToEmployeeRequest.ShiftType,
+        //            HourStart = addShiftToEmployeeRequest.HourStart,
+        //            HourEnd = addShiftToEmployeeRequest.HourEnd
+        //        };
 
-                employee.Shifts ??= new List<Shift>();
-                employee.Shifts.Add(newShift);
+        //        employee.Shifts ??= new List<Shift>();
+        //        employee.Shifts.Add(newShift);
 
-            }
+        //    }
 
-            await _employeesRepository.UpdateEmployeeAsync(employee);
+        //    await _employeesRepository.UpdateEmployeeAsync(employee);
         }
 
         public async Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest)
@@ -59,6 +61,7 @@ namespace CalendarPlanning.Server.Services
 
             var employee = new Employee()
             {
+                EmployeeId = createEmployeeRequest.EmployeeId,
                 FirstName = createEmployeeRequest.FirstName,
                 LastName = createEmployeeRequest.LastName,
                 StoreId = store.StoreId
@@ -67,12 +70,12 @@ namespace CalendarPlanning.Server.Services
             return await _employeesRepository.CreateEmployeeAsync(employee);
         }
 
-        public async Task DeleteEmployeeAsync(Guid id)
+        public async Task DeleteEmployeeAsync(string id)
         {
             await _employeesRepository.DeleteEmployeeAsync(id);
         }
 
-        public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid id)
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(string id)
         {
             return await _employeesRepository.GetEmployeeByIdAsync(id);
         }
@@ -82,7 +85,7 @@ namespace CalendarPlanning.Server.Services
             return await _employeesRepository.GetEmployeesAsync();
         }
 
-        public async Task UpdateEmployeeAsync(Guid id, UpdateEmployeeRequest updateEmployeeRequest)
+        public async Task UpdateEmployeeAsync(string id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             var stores = await _storesRepository.GetStoresAsNoTrackingAsync();
             var store = stores.FirstOrDefault(s => s.Name == updateEmployeeRequest.StoreName) ?? throw new StoreNotFoundException(updateEmployeeRequest.StoreName);

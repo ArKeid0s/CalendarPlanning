@@ -9,28 +9,31 @@ namespace CalendarPlanning.Server.Authorization
         {
             services.AddAuthorizationBuilder()
                 .AddPolicy(Policies.ReadAccess, builder => builder
-                    .RequireClaim("scope", "Calendar:Read"))
+                            .RequireAuthenticatedUser()
+                            .RequireClaim("scope", "Calendar:Read"))
 
                 .AddPolicy(Policies.WriteAccess, builder => builder
-                    .RequireClaim("scope", "Calendar:Write")
-                    .RequireRole("Admin"))
+                            .RequireAuthenticatedUser()
+                            .RequireClaim("scope", "Calendar:Write")
+                            .RequireRole("Admin"))
 
                 .AddPolicy(Policies.ConcernedUser, builder => builder
-                    .RequireAssertion(context =>
-                    {
-                        var user = context.User;
-                        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                        var routeId = (context.Resource as AuthorizationFilterContext)?.HttpContext.Request.RouteValues["id"]?.ToString();
+                            .RequireAuthenticatedUser()
+                            .RequireAssertion(context =>
+                            {
+                                var user = context.User;
+                                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                                var routeId = (context.Resource as DefaultHttpContext)?.HttpContext.Request.RouteValues["id"]?.ToString();
 
-                        if (userId != null && routeId != null)
-                        {
-                            // Allow if the user is accessing their own data or is an admin.
-                            return userId == routeId || user.IsInRole("Admin");
-                        }
+                                if (userId != null && routeId != null)
+                                {
+                                    // Allow if the user is accessing their own data or is an admin.
+                                    return userId == routeId || user.IsInRole("Admin");
+                                }
 
-                        // Deny by default.
-                        return false;
-                    }));
+                                // Deny by default.
+                                return false;
+                            }));
 
             return services;
         }

@@ -41,14 +41,14 @@ namespace CalendarPlanning.Server.Data
             {
                 new Employee
                 {
-                    EmployeeId = Guid.NewGuid(),
+                    EmployeeId = Guid.NewGuid().ToString(),
                     FirstName = "John",
                     LastName = "Doe",
                     StoreId = context.Stores.First(s => s.Name == "Store 1").StoreId
                 },
                 new Employee
                 {
-                    EmployeeId = Guid.NewGuid(),
+                    EmployeeId = Guid.NewGuid().ToString(),
                     FirstName = "Jane",
                     LastName = "Doe",
                     StoreId = context.Stores.First(s => s.Name == "Store 2").StoreId

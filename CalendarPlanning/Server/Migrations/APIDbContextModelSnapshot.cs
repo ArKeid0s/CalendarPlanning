@@ -89,9 +89,8 @@ namespace CalendarPlanning.Server.Migrations
 
             modelBuilder.Entity("CalendarPlanning.Shared.Models.Employee", b =>
                 {
-                    b.Property<Guid>("EmployeeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -111,28 +110,6 @@ namespace CalendarPlanning.Server.Migrations
                     b.ToTable("Employees", "dbo");
                 });
 
-            modelBuilder.Entity("CalendarPlanning.Shared.Models.Holiday", b =>
-                {
-                    b.Property<Guid>("HolidayId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("HolidayId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Holidays", "dbo");
-                });
-
             modelBuilder.Entity("CalendarPlanning.Shared.Models.Incentive", b =>
                 {
                     b.Property<Guid>("IncentiveId")
@@ -147,8 +124,9 @@ namespace CalendarPlanning.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("IncentiveProgressive")
                         .HasColumnType("int");
@@ -161,31 +139,6 @@ namespace CalendarPlanning.Server.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Incentives", "dbo");
-                });
-
-            modelBuilder.Entity("CalendarPlanning.Shared.Models.Shift", b =>
-                {
-                    b.Property<Guid>("ShiftId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("HourEnd")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("HourStart")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("ShiftType")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShiftId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Shifts", "dbo");
                 });
 
             modelBuilder.Entity("CalendarPlanning.Shared.Models.Store", b =>
@@ -355,17 +308,6 @@ namespace CalendarPlanning.Server.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("CalendarPlanning.Shared.Models.Holiday", b =>
-                {
-                    b.HasOne("CalendarPlanning.Shared.Models.Employee", "Employee")
-                        .WithMany("Holidays")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("CalendarPlanning.Shared.Models.Incentive", b =>
                 {
                     b.HasOne("CalendarPlanning.Shared.Models.Employee", "Employee")
@@ -375,13 +317,6 @@ namespace CalendarPlanning.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("CalendarPlanning.Shared.Models.Shift", b =>
-                {
-                    b.HasOne("CalendarPlanning.Shared.Models.Employee", null)
-                        .WithMany("Shifts")
-                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -433,13 +368,6 @@ namespace CalendarPlanning.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CalendarPlanning.Shared.Models.Employee", b =>
-                {
-                    b.Navigation("Holidays");
-
-                    b.Navigation("Shifts");
                 });
 
             modelBuilder.Entity("CalendarPlanning.Shared.Models.Store", b =>

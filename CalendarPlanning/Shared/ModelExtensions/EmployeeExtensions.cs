@@ -13,7 +13,7 @@ namespace CalendarPlanning.Shared.ModelExtensions
             StoreId = employee.StoreId,
             StoreName = employee.Store != null ? employee.Store.Name : string.Empty,
             StoreAddress = employee.Store != null ? employee.Store.Address : string.Empty,
-            Shifts = employee.Shifts?.Select(s => s.ToDto()).ToList()
+            //Shifts = employee.Shifts?.Select(s => s.ToDto()).ToList()
         };
 
         public static Employee ToModel(this EmployeeDto employeeDto) => new()
@@ -22,7 +22,7 @@ namespace CalendarPlanning.Shared.ModelExtensions
             FirstName = employeeDto.FirstName,
             LastName = employeeDto.LastName,
             StoreId = employeeDto.StoreId,
-            Shifts = employeeDto.Shifts?.Select(s => s.ToModel()).ToList()
+            //Shifts = employeeDto.Shifts?.Select(s => s.ToModel()).ToList()
         };
     }
 }
