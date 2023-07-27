@@ -16,8 +16,8 @@ namespace CalendarPlanning.Shared.Models
         [Column(TypeName = "datetime")]
         public required DateTime EndDate { get; set; }
 
-        [ForeignKey("EmployeeId")]
-        public virtual Employee? Employee { get; set; }
-        public Guid EmployeeId { get; set; }
+        //[ForeignKey("EmployeeId")]
+        //public virtual Employee? Employee { get; set; }
+        //public required string EmployeeId { get; set; }
     }
 }

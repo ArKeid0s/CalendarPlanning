@@ -18,5 +18,9 @@ namespace CalendarPlanning.Shared.Models
         public required DateTime HourEnd { get; set; }
 
         public required ShiftTypesEnum ShiftType { get; set; }
+
+        //[ForeignKey("EmployeeId")]
+        //public virtual Employee? Employee { get; set; }
+        //public required string EmployeeId { get; set; }
     }
 }

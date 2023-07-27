@@ -8,6 +8,7 @@ namespace CalendarPlanning.Shared.ModelExtensions
         public static ShiftDto ToDto(this Shift shift) => new()
         {
             ShiftId = shift.ShiftId,
+            //EmployeeId = shift.EmployeeId,
             HourStart = shift.HourStart,
             HourEnd = shift.HourEnd,
             ShiftType = shift.ShiftType,
@@ -16,6 +17,7 @@ namespace CalendarPlanning.Shared.ModelExtensions
         public static Shift ToModel(this ShiftDto shiftDto) => new()
         {
             ShiftId = shiftDto.ShiftId,
+            //EmployeeId = shiftDto.EmployeeId,
             HourStart = shiftDto.HourStart,
             HourEnd = shiftDto.HourEnd,
             ShiftType = shiftDto.ShiftType,

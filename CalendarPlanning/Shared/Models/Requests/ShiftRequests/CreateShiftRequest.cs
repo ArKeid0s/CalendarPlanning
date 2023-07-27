@@ -6,12 +6,15 @@ namespace CalendarPlanning.Shared.Models.Requests.ShiftRequests
     public class CreateShiftRequest
     {
         [Required]
-        public DateTime HourStart { get; set; }
+        public required string EmployeeId { get; set; }
 
         [Required]
-        public DateTime HourEnd { get; set; }
+        public required DateTime HourStart { get; set; }
 
         [Required]
-        public ShiftTypesEnum ShiftType { get; set; }
+        public required DateTime HourEnd { get; set; }
+
+        [Required]
+        public required ShiftTypesEnum ShiftType { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace CalendarPlanning.Server.Services
         {
             var shift = new Shift()
             {
+                //EmployeeId = createShiftRequest.EmployeeId,
                 HourStart = createShiftRequest.HourStart,
                 HourEnd = createShiftRequest.HourEnd,
                 ShiftType = createShiftRequest.ShiftType,
