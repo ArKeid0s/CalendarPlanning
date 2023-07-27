@@ -6,25 +6,27 @@
 
 <h3>Employee Details for Employee with Id @EmployeeId</h3>
 
-<AuthorizeView Roles="Admin">
-    <Authorized>
-        @if (employee is null)
-        {
-            <p><em>Loading...</em></p>
-        }
-        else
-        {
-            <p>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</p>
-        }
-    </Authorized>
-
-    <NotAuthorized>
-        <p>You are not authorized to view this page.</p>
-    </NotAuthorized>
-</AuthorizeView>
+@if (isForbidden)
+{
+    <p>You are not authorized to view this page.</p>
+}
+else if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (employee is null)
+{
+    <p>Error fetching employee details.</p>
+}
+else
+{
+    <p>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</p>
+}
 
 @code {
     private EmployeeDto? employee;
+    private bool isLoading = true;
+    private bool isForbidden = false;
 
     [Parameter]
     public string EmployeeId { get; set; } = string.Empty;
@@ -33,7 +35,23 @@
     {
         try
         {
-            employee = await Http.GetFromJsonAsync<EmployeeDto>($"api/Employees/{EmployeeId}");
+            var response = await Http.GetAsync($"api/Employees/{EmployeeId}");
+
+            isLoading = false;
+
+            if (response.IsSuccessStatusCode)
+            {
+                employee = await response.Content.ReadFromJsonAsync<EmployeeDto>();
+            }
+            else if (!response.IsSuccessStatusCode)
+            {
+                isForbidden = true;
+            }
+            else
+            {
+                // handle other possible status codes here
+                throw new Exception("Error fetching employee details.");
+            }
         }
         catch (Exception ex)
         {

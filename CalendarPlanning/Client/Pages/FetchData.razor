@@ -3,4 +3,13 @@
 
 <PageTitle>Fetch Data</PageTitle>
 
-<EmployeeList />
+<AuthorizeView>
+    <Authorized>
+        <EmployeeList />
+    </Authorized>
+
+    <NotAuthorized>
+        <p>You are not authorized to view this page.</p>
+    </NotAuthorized>
+
+</AuthorizeView>

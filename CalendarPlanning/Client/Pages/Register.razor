@@ -18,8 +18,26 @@
             <ValidationSummary />
 
             <div class="form-group">
+                <label for="firstname">First Name</label>
+                <InputText id="firstname" class="form-control" @bind-Value="registerUserRequest.FirstName" />
+                <ValidationMessage For="@(() => registerUserRequest.FirstName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <InputText id="lastname" class="form-control" @bind-Value="registerUserRequest.LastName" />
+                <ValidationMessage For="@(() => registerUserRequest.LastName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="storename">Store Name</label>
+                <InputText id="storename" class="form-control" @bind-Value="registerUserRequest.StoreName" />
+                <ValidationMessage For="@(() => registerUserRequest.StoreName)" />
+            </div>
+
+            <div class="form-group">
                 <label for="email">Email address</label>
-                <InputText id="email" class="form-control" @bind-Value="registerUserRequest.Email" />
+                <InputText id="email" type="email" class="form-control" @bind-Value="registerUserRequest.Email" />
                 <ValidationMessage For="@(() => registerUserRequest.Email)" />
             </div>
             <div class="form-group">
