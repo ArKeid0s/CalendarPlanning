@@ -1,0 +1,17 @@
+﻿@page "/IncentiveValues"
+@using CalendarPlanning.Client.Components.Incentive
+
+<h3>IncentiveValues</h3>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <IncentiveValuesList />
+    </Authorized>
+
+    <NotAuthorized>
+        <p>You are not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+}

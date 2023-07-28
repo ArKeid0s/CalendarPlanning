@@ -1,4 +1,5 @@
-﻿using CalendarPlanning.Shared.Models;
+﻿using CalendarPlanning.Shared.Enums;
+using CalendarPlanning.Shared.Models;
 
 namespace CalendarPlanning.Server.Data
 {
@@ -6,6 +7,7 @@ namespace CalendarPlanning.Server.Data
     {
         public List<Employee> employees = new();
         public List<Store> stores = new();
+        public List<IncentiveValue> incentiveValues = new();
 
         public ContextSeed()
         {
@@ -28,6 +30,15 @@ namespace CalendarPlanning.Server.Data
                 context.Employees.AddRange(employees);
                 context.SaveChanges();
             }
+
+            InitIncentiveValues();
+
+            if (!context.IncentiveValues.Any() && incentiveValues.Count != 0)
+            {
+                context.IncentiveValues.AddRange(incentiveValues);
+                context.SaveChanges();
+            }
+
         }
 
         public bool HasData(APIDbContext context)
@@ -73,6 +84,20 @@ namespace CalendarPlanning.Server.Data
                     Address = "Address 2"
                 }
             };
+        }
+
+        private void InitIncentiveValues()
+        {
+            incentiveValues = Enum.GetValues(typeof(IncentiveTypeEnum))
+                .Cast<IncentiveTypeEnum>()
+                .Select(iv => new IncentiveValue
+                {
+                    Id = (int)iv,
+                    Name = iv.ToString(),
+                    UnifocalValue = 0.0m,
+                    ProgressiveValue = 0.0m
+                })
+                .ToList();
         }
     }
 }

@@ -1,0 +1,77 @@
+﻿@using CalendarPlanning.Shared.Models.DTO;
+@using CalendarPlanning.Shared.ModelExtensions;
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (incentiveValues is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    foreach (var incentiveValue in incentiveValues)
+    {
+        <EditForm Model="incentiveValue" OnValidSubmit="() => HandleValidSubmit(incentiveValue.ToModel())">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="flex-row">
+
+                <div class ="flex-item">
+                    <label for="name">@incentiveValue.Name</label>
+                </div>
+
+                <div class ="flex-item">
+                    <label for="unifocalValue">Unifocal Value:</label>
+                    <InputNumber id="unifocalValue" @bind-Value="incentiveValue.UnifocalValue" step="0.01" />
+                    <ValidationMessage For="@(() => incentiveValue.UnifocalValue)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="progressiveValue">Progressive Value:</label>
+                    <InputNumber id="progressiveValue" @bind-Value="incentiveValue.ProgressiveValue" step="0.01" />
+                    <ValidationMessage For="@(() => incentiveValue.ProgressiveValue)" />
+                </div>
+
+                <div class="flex-item">
+                    <button type="submit">Save Changes</button>
+                </div>
+
+            </div>
+        </EditForm>
+    }
+}
+
+@code {
+    private List<IncentiveValueDto>? incentiveValues;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity!.IsAuthenticated)
+        {
+            await LoadIncentiveValues();
+        }
+    }
+
+    public async Task LoadIncentiveValues()
+    {
+        incentiveValues = await Http.GetFromJsonAsync<List<IncentiveValueDto>>("api/IncentiveValues");
+    }
+
+    private async Task HandleValidSubmit(IncentiveValue incentiveValue)
+    {
+        var response = await Http.PutAsJsonAsync($"api/IncentiveValues/{incentiveValue.Id}", incentiveValue);
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadIncentiveValues();
+            StateHasChanged();
+        }
+        else
+        {
+            // Handle error
+        }
+    }
+}

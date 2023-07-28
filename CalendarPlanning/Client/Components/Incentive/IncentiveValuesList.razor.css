@@ -1,0 +1,9 @@
+﻿.flex-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.flex-item {
+    margin-right: 1em;
+}

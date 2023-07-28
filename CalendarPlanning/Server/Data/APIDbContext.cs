@@ -17,5 +17,6 @@ namespace CalendarPlanning.Server.Data
         //public DbSet<Shift> Shifts { get; set; } = null!;
         public DbSet<Store> Stores => Set<Store>();
         public DbSet<Incentive> Incentives => Set<Incentive>();
+        public DbSet<IncentiveValue> IncentiveValues => Set<IncentiveValue>();
     }
 }
