@@ -1,27 +1,22 @@
 ﻿@page "/incentives"
 @using CalendarPlanning.Client.Components.Incentive
+@using CalendarPlanning.Shared.Models.DTO;
+@inject IIncentivesService IncentivesService
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>Incentive</h3>
 
 <CreateIncentive OnIncentiveCreated="RefreshIncentives" />
-<IncentiveList @ref="incentiveList" />
+<IncentiveList Incentives="_incentives" />
 
 @code {
-    private IncentiveList incentiveList = null!;
-    private bool isAdmin = false;
+    private List<IncentiveDto>? _incentives;
 
-    private async Task RefreshIncentives() => await incentiveList.LoadIncentives(isAdmin);
-
-    protected override async Task OnInitializedAsync()
+    private async Task RefreshIncentives()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity!.IsAuthenticated)
-        {
-            isAdmin = user.IsInRole("Admin");
-        }
+        var (userId, isAdmin) = await IncentivesService.GetUserRoleDetails();
+        _incentives = await IncentivesService.LoadIncentivesAsync(isAdmin, userId);
+        StateHasChanged();
     }
 }

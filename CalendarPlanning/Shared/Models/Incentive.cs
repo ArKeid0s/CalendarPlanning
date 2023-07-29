@@ -17,9 +17,9 @@ namespace CalendarPlanning.Shared.Models
         [Column(TypeName = "nvarchar(50)")]
         public required string ClientLastName { get; set; }
 
-        public IncentiveTypeEnum IncentiveUnifocal { get; set; }
+        public required IncentiveTypeEnum IncentiveUnifocal { get; set; }
 
-        public IncentiveTypeEnum IncentiveProgressive { get; set; }
+        public required IncentiveTypeEnum IncentiveProgressive { get; set; }
 
         [ForeignKey("EmployeeId")]
         public virtual Employee? Employee { get; set; }
