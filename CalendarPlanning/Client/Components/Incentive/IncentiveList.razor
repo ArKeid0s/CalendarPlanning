@@ -5,6 +5,7 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IIncentivesService IncentivesService
+@inject IEmployeesService EmployeesService
 
 @if (Incentives is null)
 {
@@ -12,9 +13,40 @@
 }
 else
 {
-    @if (_isAdmin)
+    @if (_isAdmin && _employees is not null)
     {
-        
+        <RadzenTabs Change=@OnChange>
+            <Tabs>
+                @foreach(EmployeeDto employee in _employees)
+                {
+                    var employeeName = employee.FirstName + " " + employee.LastName;
+                    <RadzenTabsItem Text=@employeeName>
+                        <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="5" AllowSorting="true" Data="@employees" TItem="Employee">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="string" Property="BirthDate" Title="Birth Date">
+                                    <Template Context="data">
+                                        @String.Format("{0:d}", data.BirthDate)
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn TItem="Employee" Property="HireDate" Title="Hire Date">
+                                    <Template Context="data">
+                                        @String.Format("{0:d}", data.HireDate)
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn TItem="Employee" Property="Address" Title="Address" />
+                                <RadzenDataGridColumn TItem="Employee" Property="City" Title="City" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Region" Title="Region" />
+                                <RadzenDataGridColumn TItem="Employee" Property="PostalCode" Title="Postal Code" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Country" Title="Country" />
+                                <RadzenDataGridColumn TItem="Employee" Property="HomePhone" Title="Home Phone" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Extension" Title="Extension" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Notes" Title="Notes" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenTabsItem>
+                }
+            </Tabs>
+        </RadzenTabs>
     }
     else
     {
@@ -37,6 +69,7 @@ else
     [Parameter]
     public List<IncentiveDto>? Incentives { get; set; }
     private List<EmployeeDto>? _employees;
+
     private string _userId = string.Empty;
     private bool _isAdmin;
 
@@ -48,5 +81,11 @@ else
     {
         (var userId, _isAdmin) = await IncentivesService.GetUserRoleDetails();
         Incentives = await IncentivesService.LoadIncentivesAsync(_isAdmin, userId);
+        _employees = await EmployeesService.GetAllAsync();
+    }
+
+    private void OnChange(int index)
+    {
+        
     }
 }

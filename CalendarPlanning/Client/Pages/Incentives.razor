@@ -7,8 +7,8 @@
 
 <h3>Incentive</h3>
 
-<CreateIncentive OnIncentiveCreated="RefreshIncentives" />
-<IncentiveList Incentives="_incentives" />
+<CreateIncentive OnIncentiveCreated=@RefreshIncentives />
+<IncentiveList Incentives="@_incentives" />
 
 @code {
     private List<IncentiveDto>? _incentives;
