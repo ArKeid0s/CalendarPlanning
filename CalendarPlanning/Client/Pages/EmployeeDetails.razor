@@ -1,27 +1,29 @@
 ﻿@page "/employees/{EmployeeId}"
 
 @using CalendarPlanning.Shared.Models.DTO;
-@using Microsoft.AspNetCore.Components.QuickGrid;
 @inject HttpClient Http
 
-<h3>Employee Details for Employee with Id @EmployeeId</h3>
+<PageTitle>Employee Details</PageTitle>
+<MudText Typo="Typo.h3">Employee Details for Employee with Id @EmployeeId</MudText>
 
-@if (isForbidden)
-{
-    <p>You are not authorized to view this page.</p>
-}
-else if (isLoading)
-{
-    <p><em>Loading...</em></p>
-}
-else if (employee is null)
-{
-    <p>Error fetching employee details.</p>
-}
-else
-{
-    <p>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</p>
-}
+<MudPaper Class="d-flex align-center justify-center mud-width-full py-8" Elevation="0">
+    @if (isForbidden)
+    {
+        <MudAlert Severity="Severity.Error">You are not authorized to view this page.</MudAlert>
+    }
+    else if (isLoading)
+    {
+        <MudProgressCircular Size="Size.Medium" Indeterminate="true" />
+    }
+    else if (employee is null)
+    {
+        <MudAlert Severity="Severity.Error">Error fetching employee details.</MudAlert>
+    }
+    else
+    {
+        <MudText>@employee.FirstName @employee.LastName @employee.StoreName @employee.StoreAddress</MudText>
+    }
+</MudPaper>
 
 @code {
     private EmployeeDto? employee;
@@ -33,6 +35,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // TODO: put this in the EmployeeService
         try
         {
             var response = await Http.GetAsync($"api/Employees/{EmployeeId}");

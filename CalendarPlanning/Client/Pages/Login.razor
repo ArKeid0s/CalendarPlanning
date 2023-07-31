@@ -3,44 +3,52 @@
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavigationManager
 
-<h1>Login</h1>
+<PageTitle>Login</PageTitle>
+<MudText Typo="Typo.h3">Login</MudText>
+<MudText Typo="Typo.h5">Please enter your details</MudText>
 
 @if (showErrorMessage)
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@errorMessage</p>
-    </div>
+    <MudAlert Severity="Severity.Error" Class="my-3">@errorMessage</MudAlert>
 }
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Please enter your details</h5>
-        <EditForm Model="loginUserRequest" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <div class="form-group">
-                <label for="email">Email address</label>
-                <InputText id="email" class="form-control" @bind-Value="loginUserRequest.Email" />
-                <ValidationMessage For="@(() => loginUserRequest.Email)" />
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <InputText id="password" type="password" class="form-control" @bind-Value="loginUserRequest.Password" />
-                <ValidationMessage For="@(() => loginUserRequest.Password)" />
-            </div>
-
-            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">@buttonLabel</button>
-        </EditForm>
-    </div>
-</div>
+<EditForm Model="loginUserRequest" OnValidSubmit="@HandleLogin">
+    <DataAnnotationsValidator />
+    <MudGrid Class="my-3">
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Email" InputType="InputType.Email" @bind-Value="loginUserRequest.Email" For="@(() => loginUserRequest.Email)" />
+                    <MudTextField Label="Password" InputType="InputType.Password" Class="mt-3" @bind-Value="loginUserRequest.Password" For="@(() => loginUserRequest.Password)" />
+                </MudCardContent>
+                <MudCardActions Class="d-flex align-center justify-center">
+                    <MudButton ButtonType="ButtonType.Submit" Disabled="@isSubmitting" Variant="Variant.Filled" Color="Color.Primary">
+                        @if (isSubmitting)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2 cursor-wait">Loading...</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Login</MudText>
+                        }
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                If you don't have an account, please <MudLink Href="/register" Underline="Underline.Always" Typo="Typo.body2">register</MudLink>
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>
 
 @code {
     private LoginUserRequest loginUserRequest = new LoginUserRequest();
     private bool showErrorMessage = false;
     private string errorMessage = string.Empty;
     private bool isSubmitting = false;
-    private string buttonLabel => isSubmitting ? "Loading..." : "Login";
 
     private async Task HandleLogin()
     {

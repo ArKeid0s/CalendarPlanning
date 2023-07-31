@@ -1,43 +1,40 @@
 ﻿@using CalendarPlanning.Shared.Models.DTO;
-@using Microsoft.AspNetCore.Components.QuickGrid;
 
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<h3>EmployeeList</h3>
-
 @if (employees is null)
 {
-    <p><em>Loading...</em></p>
+    <MudProgressCircular Size="Size.Medium" Indeterminate="true" />
 }
-else
-{
-    <QuickGrid Items="employees.AsQueryable()" Pagination="paginationState">
-        <PropertyColumn Property="e => e.FirstName" Title="First Name" Sortable="true" />
-        <PropertyColumn Property="e => e.LastName" Title="Last Name" Sortable="true" />
-        <PropertyColumn Property="e => e.StoreName" Title="Store Name" />
-        <PropertyColumn Property="e => e.StoreAddress" Title="Store Address" />
-        <TemplateColumn>
-            <button class="btn btn-primary" onclick="@(() => ShowItToMe(context))"><i class="oi oi-person" /></button>
-        </TemplateColumn>
-    </QuickGrid>
 
-    <Paginator State="paginationState" />
-}
+<MudDataGrid Items="@employees" T="EmployeeDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="0" RowClick="@RowClicked" Striped="true" Hover="true" RowClass="cursor-pointer">
+    <ToolBarContent>
+        <MudText Typo="Typo.h3">Employees</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Title="First Name" Property="x => x.FirstName" />
+        <PropertyColumn Title="Last Name" Property="x => x.LastName" />
+        <PropertyColumn Title="Store Name" Property="x => x.StoreName" />
+        <PropertyColumn Title="Store Address" Property="x => x.StoreAddress" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="EmployeeDto" />
+    </PagerContent>
+</MudDataGrid>
 
 
 @code {
     private List<EmployeeDto>? employees;
-
-    PaginationState paginationState = new PaginationState() { ItemsPerPage = 10 };
 
     protected override async Task OnInitializedAsync()
     {
         employees = await Http.GetFromJsonAsync<List<EmployeeDto>>("api/Employees");
     }
 
-    protected void ShowItToMe(EmployeeDto employee)
+    public void RowClicked(DataGridRowClickEventArgs<EmployeeDto> row)
     {
-        NavigationManager.NavigateTo($"/employees/{employee.EmployeeId}");
+        NavigationManager.NavigateTo($"/employees/{row.Item.EmployeeId}");
     }
 }

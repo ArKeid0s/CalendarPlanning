@@ -17,6 +17,18 @@ namespace CalendarPlanning.Client.Services
             _authenticationStateProvider = authenticationStateProvider;
         }
 
+        public async Task DeleteIncentiveAsync(string userId, Guid incentiveId)
+        {
+            try
+            {
+                await _http.DeleteAsync($"api/Incentives/IncentivesOfUser/{userId}/{incentiveId}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<(string userId, bool isAdmin)> GetUserRoleDetails()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
