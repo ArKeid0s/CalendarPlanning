@@ -6,5 +6,6 @@ namespace CalendarPlanning.Client.Services.Interfaces
     {
         Task<(string userId, bool isAdmin)> GetUserRoleDetails();
         Task<List<IncentiveDto>?> LoadIncentivesAsync(bool isAdmin, string userId);
+        Task DeleteIncentiveAsync(string userId, Guid incentiveId);
     }
 }

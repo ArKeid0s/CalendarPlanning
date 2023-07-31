@@ -1,8 +1,8 @@
-﻿@page "/fetchdata"
+﻿@page "/employees"
 @using CalendarPlanning.Client.Components.Employee
 @inject HttpClient Http
 
-<PageTitle>Fetch Data</PageTitle>
+<PageTitle>Employees</PageTitle>
 
 <AuthorizeView>
     <Authorized>
@@ -10,7 +10,7 @@
     </Authorized>
 
     <NotAuthorized>
-        <p>You are not authorized to view this page.</p>
+        <MudAlert Severity="Severity.Error">You are not allowed to view this page.</MudAlert>
     </NotAuthorized>
 
 </AuthorizeView>

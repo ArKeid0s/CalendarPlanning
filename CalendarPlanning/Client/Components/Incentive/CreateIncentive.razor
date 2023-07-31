@@ -4,34 +4,46 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h3>Create Incentive</h3>
+<MudText Typo="Typo.h3">Create Incentive</MudText>
 
 <EditForm Model="@createIncentiveRequest" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
 
-    <div>
-        <label for="clientFirstName">Client First Name:</label>
-        <InputText id="clientFirstName" @bind-Value="createIncentiveRequest.ClientFirstName" />
-        <ValidationMessage For="@(() => createIncentiveRequest.ClientFirstName)" />
-    </div>
-    <div>
-        <label for="clientLastName">Client Last Name:</label>
-        <InputText id="clientLastName" @bind-Value="createIncentiveRequest.ClientLastName" />
-        <ValidationMessage For="@(() => createIncentiveRequest.ClientLastName)" />
-    </div>
-
-    <!-- Note that Blazor doesn't have built-in input components for enums.
-         You might want to create your own custom component or use select input like this: -->
-    <div>
-        <label for="incentiveUnifocal">Incentive Unifocal:</label>
-        <EnumInput id="incentiveUnifocal" class="form-select" @bind-Value="@createIncentiveRequest.IncentiveUnifocal" />
-    </div>
-    <div>
-        <label for="incentiveProgressive">Incentive Progressive:</label>
-        <EnumInput id="incentiveProgressive" class="form-select" @bind-Value="@createIncentiveRequest.IncentiveProgressive" />
-    </div>
-
-    <button type="submit">Create Incentive</button>
+    <MudGrid Class="my-3">
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Client First Name" @bind-Value="createIncentiveRequest.ClientFirstName" For="@(() => createIncentiveRequest.ClientFirstName)" />
+                    <MudTextField Label="Client Last Name" @bind-Value="createIncentiveRequest.ClientLastName" For="@(() => createIncentiveRequest.ClientLastName)" Class="mt-3" />
+                    <MudSelect @bind-Value="createIncentiveRequest.IncentiveUnifocal" T="IncentiveTypeEnum" Label="Unifocal Incentive" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" Class="mt-3">
+                        @foreach (IncentiveTypeEnum incentive in Enum.GetValues(typeof(IncentiveTypeEnum)))
+                        {
+                            <MudSelectItem Value="@incentive">@incentive</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect @bind-Value="createIncentiveRequest.IncentiveProgressive" Label="Progressive Incentive" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" Class="mt-3">
+                        @foreach (IncentiveTypeEnum incentive in Enum.GetValues(typeof(IncentiveTypeEnum)))
+                        {
+                            <MudSelectItem Value="@incentive">@incentive</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudCardContent>
+                <MudCardActions Class="d-flex align-center justify-center">
+                    <MudButton ButtonType="ButtonType.Submit" Disabled="@isSubmitting" Variant="Variant.Filled" Color="Color.Primary">
+                        @if (isSubmitting)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2 cursor-wait">Loading...</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Create</MudText>
+                        }
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
 </EditForm>
 
 @code {
@@ -39,9 +51,11 @@
     public EventCallback OnIncentiveCreated { get; set; }
 
     private CreateIncentiveRequest createIncentiveRequest = new();
+    private bool isSubmitting = false;
 
     private async Task HandleValidSubmit()
     {
+        isSubmitting = true;
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
@@ -60,5 +74,7 @@
         {
             // Handle error
         }
+
+        isSubmitting = false;
     }
 }
