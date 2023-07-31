@@ -35,12 +35,12 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         [Authorize(Policy = Policies.ConcernedUser)]
-        [HttpGet("IncentivesOfUser/{id}", Name = "GetIncentivesOfUser")]
-        public async Task<IActionResult> GetIncentivesOfUserById(string id)
+        [HttpGet("IncentivesOfUser/{userId}", Name = "GetIncentivesOfUserById")]
+        public async Task<IActionResult> GetIncentivesOfUserByUserId(string userId)
         {
             try
             {
-                return Ok(await _incentivesService.GetIncentivesOfUserById(id));
+                return Ok(await _incentivesService.GetIncentivesOfUserById(userId));
             }
             catch (EmployeeNotFoundException ex)
             {
@@ -118,6 +118,29 @@ namespace CalendarPlanning.Server.Controllers
             catch (InvalidRequestException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize(Policy = Policies.ConcernedUser)]
+        [HttpDelete("IncentivesOfUser/{userId}/{id:guid}", Name = "DeleteIncentivesOfUserById")]
+        public async Task<IActionResult> DeleteIncentivesOfUserById(string userId, Guid id)
+        {
+            try
+            {
+                await _incentivesService.DeleteIncentiveOfUserByIdAsync(userId, id);
+                return NoContent();
+            }
+            catch (IncentiveNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (EmployeeNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

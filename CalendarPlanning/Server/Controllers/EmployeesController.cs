@@ -45,21 +45,21 @@ namespace CalendarPlanning.Server.Controllers
 
         // GET: api/<EmployeesController>/{id}
         [Authorize(Policy =Policies.ConcernedUser)]
-        [HttpGet("{id}", Name = "GetEmployeeById")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("{userId}", Name = "GetEmployeeById")]
+        public async Task<IActionResult> Get(string userId)
         {
             try
             {
-                return Ok(await _employeesService.GetEmployeeByIdAsync(id));
+                return Ok(await _employeesService.GetEmployeeByIdAsync(userId));
             }
             catch (EmployeeNotFoundException ex)
             {
-                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while getting employee with id {Id} on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogError(ex, "Error while getting employee with id {Id} on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     errorCode = StatusCodes.Status500InternalServerError,
@@ -107,8 +107,8 @@ namespace CalendarPlanning.Server.Controllers
 
         // PUT api/<EmployeesController>/5
         [Authorize(Policy = Policies.WriteAccess)]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(string id, UpdateEmployeeRequest updateEmployeeRequest)
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateEmployee(string userId, UpdateEmployeeRequest updateEmployeeRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -118,17 +118,17 @@ namespace CalendarPlanning.Server.Controllers
 
             try
             {
-                await _employeesService.UpdateEmployeeAsync(id, updateEmployeeRequest);
+                await _employeesService.UpdateEmployeeAsync(userId, updateEmployeeRequest);
                 return NoContent();
             }
             catch (EmployeeNotFoundException)
             {
-                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return NotFound();
             }
             catch (EmployeeSaveUpdateException ex)
             {
-                _logger.LogError(ex, "Error while updating employee with id {Id} on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogError(ex, "Error while updating employee with id {Id} on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return BadRequest(ex.Message);
             }
             catch (InvalidRequestException ex)
@@ -138,7 +138,7 @@ namespace CalendarPlanning.Server.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while updating employee with id {Id} on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogError(ex, "Error while updating employee with id {Id} on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     errorCode = StatusCodes.Status500InternalServerError,
@@ -151,22 +151,22 @@ namespace CalendarPlanning.Server.Controllers
 
         // DELETE api/<EmployeesController>/5
         [Authorize(Policy = Policies.WriteAccess)]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Delete(string userId)
         {
             try
             {
-                await _employeesService.DeleteEmployeeAsync(id);
+                await _employeesService.DeleteEmployeeAsync(userId);
                 return NoContent();
             }
             catch (EmployeeNotFoundException)
             {
-                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return NotFound();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while deleting employee with id {Id} on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogError(ex, "Error while deleting employee with id {Id} on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     errorCode = StatusCodes.Status500InternalServerError,
@@ -178,8 +178,8 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         [Authorize(Policy = Policies.WriteAccess)]
-        [HttpPut("{id}/AddShiftToEmployee")]
-        public async Task<IActionResult> AddShiftToEmployee(string id, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
+        [HttpPut("{userId}/AddShiftToEmployee")]
+        public async Task<IActionResult> AddShiftToEmployee(string userId, AddShiftToEmployeeRequest addShiftToEmployeeRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -189,17 +189,17 @@ namespace CalendarPlanning.Server.Controllers
 
             try
             {
-                await _employeesService.AddShiftToEmployeeAsync(id, addShiftToEmployeeRequest);
+                await _employeesService.AddShiftToEmployeeAsync(userId, addShiftToEmployeeRequest);
                 return NoContent();
             }
             catch (EmployeeNotFoundException)
             {
-                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogWarning("Employee with id {Id} was not found on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return NotFound();
             }
             catch (EmployeeSaveUpdateException ex)
             {
-                _logger.LogError(ex, "Error while adding shift to employee with id {Id} on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogError(ex, "Error while adding shift to employee with id {Id} on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return BadRequest(ex.Message);
             }
             catch (InvalidRequestException ex)
@@ -209,7 +209,7 @@ namespace CalendarPlanning.Server.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while adding shift to employee with id {Id} on machine {Machine}. TraceId: {TraceId}", id, Environment.MachineName, Activity.Current?.TraceId);
+                _logger.LogError(ex, "Error while adding shift to employee with id {Id} on machine {Machine}. TraceId: {TraceId}", userId, Environment.MachineName, Activity.Current?.TraceId);
                 return StatusCode(StatusCodes.Status500InternalServerError, new
                 {
                     errorCode = StatusCodes.Status500InternalServerError,

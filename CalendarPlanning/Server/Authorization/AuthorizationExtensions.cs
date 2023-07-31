@@ -23,7 +23,7 @@ namespace CalendarPlanning.Server.Authorization
                             {
                                 var user = context.User;
                                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                                var routeId = (context.Resource as DefaultHttpContext)?.HttpContext.Request.RouteValues["id"]?.ToString();
+                                var routeId = (context.Resource as DefaultHttpContext)?.HttpContext.Request.RouteValues["userId"]?.ToString();
 
                                 if (userId != null && routeId != null)
                                 {

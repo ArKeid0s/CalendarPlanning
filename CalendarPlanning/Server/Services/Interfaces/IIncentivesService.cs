@@ -11,5 +11,6 @@ namespace CalendarPlanning.Server.Services.Interfaces
         Task<IncentiveDto> CreateIncentiveAsync(CreateIncentiveRequest createIncentiveRequest);
         Task UpdateIncentiveAsync(Guid id, UpdateIncentiveRequest updateIncentiveRequest);
         Task DeleteIncentiveAsync(Guid id);
+        Task DeleteIncentiveOfUserByIdAsync(string userId, Guid id);
     }
 }

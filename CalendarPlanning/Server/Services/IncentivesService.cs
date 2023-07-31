@@ -41,6 +41,11 @@ namespace CalendarPlanning.Server.Services
             await _incentivesRepository.DeleteIncentiveAsync(id);
         }
 
+        public async Task DeleteIncentiveOfUserByIdAsync(string userId, Guid id)
+        {
+            await _incentivesRepository.DeleteIncentiveOfUserByIdAsync(userId, id);
+        }
+
         public async Task<IncentiveDto> GetIncentiveByIdAsync(Guid id)
         {
             return await _incentivesRepository.GetIncentiveByIdAsNoTrackingAsync(id);
