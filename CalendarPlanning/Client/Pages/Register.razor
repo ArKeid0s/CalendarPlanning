@@ -3,57 +3,71 @@
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Register</PageTitle>
-<MudText Typo="Typo.h3">Register</MudText>
+<h1>Register</h1>
 
 @if (registerResult != null && !registerResult.Succeeded)
 {
-    <MudAlert Severity="Severity.Error" Class="my-3">@registerResult.ErrorMessage</MudAlert>
+    <div class="alert alert-danger">@registerResult.ErrorMessage</div>
 }
 
-<EditForm Model="registerUserRequest" OnValidSubmit="@HandleRegistration">
-    <DataAnnotationsValidator />
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Please enter your details</h5>
+        <EditForm Model="registerUserRequest" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-    <MudGrid Class="my-3">
-        <MudItem xs="12">
-            <MudCard>
-                <MudCardContent>
-                    <MudTextField Label="First Name" @bind-Value="registerUserRequest.FirstName" For="@(() => registerUserRequest.FirstName)" />
-                    <MudTextField Label="Last Name" @bind-Value="registerUserRequest.LastName" For="@(() => registerUserRequest.LastName)" Class="mt-3" />
-                    <MudTextField Label="Store Name" @bind-Value="registerUserRequest.StoreName" For="@(() => registerUserRequest.StoreName)" Class="mt-3" />
-                    <MudTextField Label="Email address" InputType="InputType.Email" @bind-Value="registerUserRequest.Email" For="@(() => registerUserRequest.Email)" Class="mt-3" />
-                    <MudTextField Label="Password" InputType="InputType.Password" @bind-Value="registerUserRequest.Password" For="@(() => registerUserRequest.Password)" Class="mt-3" />
-                    <MudTextField Label="Confirm Password" InputType="InputType.Password" @bind-Value="registerUserRequest.ConfirmPassword" For="@(() => registerUserRequest.ConfirmPassword)" Class="mt-3" />
-                </MudCardContent>
-                <MudCardActions Class="d-flex align-center justify-center">
-                    <MudButton ButtonType="ButtonType.Submit" Disabled="@isSubmitting" Variant="Variant.Filled" Color="Color.Primary">
-                        @if (isSubmitting)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <MudText Class="ms-2 cursor-wait">Loading...</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Register</MudText>
-                        }
-                    </MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
-</EditForm>
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <InputText id="firstname" class="form-control" @bind-Value="registerUserRequest.FirstName" />
+                <ValidationMessage For="@(() => registerUserRequest.FirstName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <InputText id="lastname" class="form-control" @bind-Value="registerUserRequest.LastName" />
+                <ValidationMessage For="@(() => registerUserRequest.LastName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="storename">Store Name</label>
+                <InputText id="storename" class="form-control" @bind-Value="registerUserRequest.StoreName" />
+                <ValidationMessage For="@(() => registerUserRequest.StoreName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <InputText id="email" type="email" class="form-control" @bind-Value="registerUserRequest.Email" />
+                <ValidationMessage For="@(() => registerUserRequest.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="registerUserRequest.Password" />
+                <ValidationMessage For="@(() => registerUserRequest.Password)" />
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="registerUserRequest.ConfirmPassword" />
+                <ValidationMessage For="@(() => registerUserRequest.ConfirmPassword)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">@buttonLabel</button>
+        </EditForm>
+    </div>
+</div>
 
 @code {
     private RegisterUserRequest registerUserRequest = new RegisterUserRequest();
     private RegisterResult? registerResult;
     private bool isSubmitting = false;
+    private string buttonLabel => isSubmitting ? "Loading..." : "Register";
 
     private async Task HandleRegistration()
     {
         isSubmitting = true;
         registerResult = await AuthService.Register(registerUserRequest);
 
-        if (registerResult?.Succeeded == true)
+        if (registerResult.Succeeded)
         {
             NavigationManager.NavigateTo("/login");
         }

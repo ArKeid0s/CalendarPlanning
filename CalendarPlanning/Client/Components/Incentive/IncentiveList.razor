@@ -1,5 +1,6 @@
 ﻿@using CalendarPlanning.Shared.Enums;
 @using CalendarPlanning.Shared.Models.DTO;
+@using Microsoft.AspNetCore.Components.QuickGrid;
 @using System.Security.Claims;
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -8,95 +9,83 @@
 
 @if (Incentives is null)
 {
-    <MudProgressCircular Size="Size.Medium" Indeterminate="true" />
-}
-
-@if (_isAdmin && _employees is not null)
-{
-    <MudText Typo="Typo.h3" Class="my-3">Incentives</MudText>
-    <MudTabs Elevation="0" Rounded="false" ApplyEffectsToContainer="false" PanelClass="pa-6">
-        <ChildContent>
-            @foreach (EmployeeDto employee in _employees)
-            {
-                <MudTabPanel Text="@($"{employee.FirstName} {employee.LastName}")">
-                    <MudDataGrid Items="@Incentives!.Where((i) => i.EmployeeId == employee.EmployeeId)" T="IncentiveDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="0" Striped="true" Hover="true">
-                        <Columns>
-                            <PropertyColumn Title="First Name" Property="x => x.ClientFirstName" />
-                            <PropertyColumn Title="Last Name" Property="x => x.ClientLastName" />
-                            <PropertyColumn Title="Last Name" Property="x => x.IncentiveUnifocal" />
-                            <PropertyColumn Title="Last Name" Property="x => x.IncentiveProgressive" />
-                            <TemplateColumn CellClass="d-flex justify-end">
-                                <CellTemplate>
-                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="Color.Error" OnClick="@(() => HandleDeleteIncentive(context.Item.IncentiveId))" />
-                                </CellTemplate>
-                            </TemplateColumn>
-                        </Columns>
-                        <PagerContent>
-                            <MudDataGridPager T="IncentiveDto" />
-                        </PagerContent>
-                    </MudDataGrid>
-                </MudTabPanel>
-            }
-        </ChildContent>
-    </MudTabs>
+    <p><em>Loading...</em></p>
 }
 else
 {
-    <MudToolBar WrapContent="true">
-        <MudText Typo="Typo.h3">My Incentives</MudText>
-        <MudSpacer />
-        <IncentivesValueCalculator />
-    </MudToolBar>
-    <MudDataGrid Items="@Incentives" T="IncentiveDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="0" Striped="true" Hover="true">
-        <Columns>
-            <PropertyColumn Title="First Name" Property="x => x.ClientFirstName" />
-            <PropertyColumn Title="Last Name" Property="x => x.ClientLastName" />
-            <PropertyColumn Title="Last Name" Property="x => x.IncentiveUnifocal" />
-            <PropertyColumn Title="Last Name" Property="x => x.IncentiveProgressive" />
-            <TemplateColumn CellClass="d-flex justify-end">
-                <CellTemplate>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="Color.Error" OnClick="@(() => HandleDeleteIncentive(context.Item.IncentiveId))" />
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-        <PagerContent>
-            <MudDataGridPager T="IncentiveDto" />
-        </PagerContent>
-    </MudDataGrid>
+    @if (_isAdmin && _employees is not null)
+    {
+        <RadzenTabs Change=@OnChange>
+            <Tabs>
+                @foreach(EmployeeDto employee in _employees)
+                {
+                    var employeeName = employee.FirstName + " " + employee.LastName;
+                    <RadzenTabsItem Text=@employeeName>
+                        <RadzenDataGrid ColumnWidth="150px" AllowFiltering="true" AllowPaging="true" PageSize="5" AllowSorting="true" Data="@employees" TItem="Employee">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="string" Property="BirthDate" Title="Birth Date">
+                                    <Template Context="data">
+                                        @String.Format("{0:d}", data.BirthDate)
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn TItem="Employee" Property="HireDate" Title="Hire Date">
+                                    <Template Context="data">
+                                        @String.Format("{0:d}", data.HireDate)
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn TItem="Employee" Property="Address" Title="Address" />
+                                <RadzenDataGridColumn TItem="Employee" Property="City" Title="City" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Region" Title="Region" />
+                                <RadzenDataGridColumn TItem="Employee" Property="PostalCode" Title="Postal Code" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Country" Title="Country" />
+                                <RadzenDataGridColumn TItem="Employee" Property="HomePhone" Title="Home Phone" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Extension" Title="Extension" />
+                                <RadzenDataGridColumn TItem="Employee" Property="Notes" Title="Notes" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenTabsItem>
+                }
+            </Tabs>
+        </RadzenTabs>
+    }
+    else
+    {
+        <div class="grid" tabindex="-1">
+            <QuickGrid Items="Incentives.AsQueryable()" Virtualize="true">
+                <TemplateColumn Title="Client" SortBy="@sortByName">
+                    <div class="flex items-center">
+                        <p><span class="text-uppercase">@context.ClientLastName</span> @context.ClientFirstName</p>
+                    </div>
+                </TemplateColumn>
+                <PropertyColumn Title="Incentive Unifocal" Property="i => i.IncentiveUnifocal" />
+                <PropertyColumn Title="Incentive Progressive" Property="i => i.IncentiveProgressive" />
+            </QuickGrid>
+        </div>
+    }
 }
 
-<MudMessageBox @ref="messageBox" Title="Warning" CancelText="Cancel">
-    <MessageContent>
-        Deleting can <b>not</b> be undone!
-    </MessageContent>
-    <YesButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever" Class="ml-3">Delete!</MudButton>
-    </YesButton>
-</MudMessageBox>
 
 @code {
     [Parameter]
     public List<IncentiveDto>? Incentives { get; set; }
     private List<EmployeeDto>? _employees;
-    private MudMessageBox? messageBox;
 
     private string _userId = string.Empty;
     private bool _isAdmin;
 
+    GridSort<IncentiveDto> sortByName = GridSort<IncentiveDto>
+        .ByAscending(p => p.ClientLastName)
+        .ThenAscending(p => p.ClientFirstName);
+
     protected override async Task OnInitializedAsync()
     {
-        (_userId, _isAdmin) = await IncentivesService.GetUserRoleDetails();
-        Incentives = await IncentivesService.LoadIncentivesAsync(_isAdmin, _userId);
+        (var userId, _isAdmin) = await IncentivesService.GetUserRoleDetails();
+        Incentives = await IncentivesService.LoadIncentivesAsync(_isAdmin, userId);
         _employees = await EmployeesService.GetAllAsync();
     }
 
-    private async Task HandleDeleteIncentive(Guid id)
+    private void OnChange(int index)
     {
-        bool? result = await messageBox!.Show();
-        if (result is not null && result is true)
-        {
-            await IncentivesService.DeleteIncentiveAsync(_userId, id);
-            Incentives = await IncentivesService.LoadIncentivesAsync(_isAdmin, _userId);
-        }
+        
     }
 }

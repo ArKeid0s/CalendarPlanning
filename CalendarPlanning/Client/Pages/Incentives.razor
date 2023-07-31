@@ -2,20 +2,13 @@
 @using CalendarPlanning.Client.Components.Incentive
 @using CalendarPlanning.Shared.Models.DTO;
 @inject IIncentivesService IncentivesService
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Incentives</PageTitle>
+<h3>Incentive</h3>
 
-<AuthorizeView>
-    <Authorized>
-        <CreateIncentive OnIncentiveCreated=@RefreshIncentives />
-        <IncentiveList Incentives="@_incentives" />
-    </Authorized>
-
-    <NotAuthorized>
-        <MudAlert Severity="Severity.Error">You are not allowed to view this page.</MudAlert>
-    </NotAuthorized>
-</AuthorizeView>
+<CreateIncentive OnIncentiveCreated=@RefreshIncentives />
+<IncentiveList Incentives="@_incentives" />
 
 @code {
     private List<IncentiveDto>? _incentives;

@@ -1,12 +1,10 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <MudAvatar Color="Color.Secondary" Class="mr-3">@context.User.Identity!.Name!.ToUpper()[0]</MudAvatar>
-        <MudText Class="mr-5"> Hello, @context.User.Identity!.Name! </MudText>
-        <MudButton Href="LogOut" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Logout" Color="Color.Error">Log out</MudButton>
+        Hello, @context.User.Identity!.Name!
+        <a href="LogOut">Log out</a>
     </Authorized>
-
     <NotAuthorized>
-        <MudButton Class="mr-5" Href="LogIn" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Login" Color="Color.Info">Log in</MudButton>
-        <MudButton Href="Register" Variant="Variant.Filled" Color="Color.Secondary">Register</MudButton>
+        <a href="Register">Register</a>
+        <a href="LogIn">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
