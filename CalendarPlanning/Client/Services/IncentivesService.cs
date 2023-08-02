@@ -2,12 +2,16 @@
 using System.Security.Claims;
 using CalendarPlanning.Client.Services.Interfaces;
 using CalendarPlanning.Shared.Models.DTO;
+using CalendarPlanning.Shared.Models.Requests.IncentiveRequests;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace CalendarPlanning.Client.Services
 {
     public class IncentivesService : IIncentivesService
     {
+        public List<IncentiveDto>? Incentives { get; private set; }
+        public event Action? OnIncentivesUpdated;
+
         private readonly HttpClient _http;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
 
@@ -17,11 +21,19 @@ namespace CalendarPlanning.Client.Services
             _authenticationStateProvider = authenticationStateProvider;
         }
 
+        public async Task<HttpResponseMessage> CreateIncentiveAsync(CreateIncentiveRequest createIncentiveRequest)
+        {
+            var result = await _http.PostAsJsonAsync("/api/Incentives", createIncentiveRequest);
+            NotifyIncentivesUpdated();
+            return result;
+        }
+
         public async Task DeleteIncentiveAsync(string userId, Guid incentiveId)
         {
             try
             {
                 await _http.DeleteAsync($"api/Incentives/IncentivesOfUser/{userId}/{incentiveId}");
+                NotifyIncentivesUpdated();
             }
             catch (Exception ex)
             {
@@ -45,7 +57,7 @@ namespace CalendarPlanning.Client.Services
             throw new Exception("User is not authenticated");
         }
 
-        public async Task<List<IncentiveDto>?> LoadIncentivesAsync(bool isAdmin, string userId)
+        private async Task<List<IncentiveDto>?> GetIncentivesAsync(bool isAdmin, string userId)
         {
             if (isAdmin)
             {
@@ -69,6 +81,18 @@ namespace CalendarPlanning.Client.Services
                     throw new Exception(ex.Message);
                 }
             }
+        }
+
+        public async Task LoadIncentives()
+        {
+            var (userId, isAdmin) = await GetUserRoleDetails();
+            Incentives = await GetIncentivesAsync(isAdmin, userId);
+            NotifyIncentivesUpdated();
+        }
+
+        private void NotifyIncentivesUpdated()
+        {
+            OnIncentivesUpdated?.Invoke();
         }
     }
 }

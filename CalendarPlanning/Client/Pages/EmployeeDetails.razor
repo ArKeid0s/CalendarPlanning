@@ -1,17 +1,13 @@
 ﻿@page "/employees/{EmployeeId}"
 
 @using CalendarPlanning.Shared.Models.DTO;
-@inject HttpClient Http
+@inject IEmployeesService EmployeesService
 
 <PageTitle>Employee Details</PageTitle>
 <MudText Typo="Typo.h3">Employee Details for Employee with Id @EmployeeId</MudText>
 
 <MudPaper Class="d-flex align-center justify-center mud-width-full py-8" Elevation="0">
-    @if (isForbidden)
-    {
-        <MudAlert Severity="Severity.Error">You are not authorized to view this page.</MudAlert>
-    }
-    else if (isLoading)
+    @if (isLoading)
     {
         <MudProgressCircular Size="Size.Medium" Indeterminate="true" />
     }
@@ -28,37 +24,14 @@
 @code {
     private EmployeeDto? employee;
     private bool isLoading = true;
-    private bool isForbidden = false;
 
     [Parameter]
     public string EmployeeId { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        // TODO: put this in the EmployeeService
-        try
-        {
-            var response = await Http.GetAsync($"api/Employees/{EmployeeId}");
+        employee = await EmployeesService.GetEmployeeByIdAsync(EmployeeId);
 
-            isLoading = false;
-
-            if (response.IsSuccessStatusCode)
-            {
-                employee = await response.Content.ReadFromJsonAsync<EmployeeDto>();
-            }
-            else if (!response.IsSuccessStatusCode)
-            {
-                isForbidden = true;
-            }
-            else
-            {
-                // handle other possible status codes here
-                throw new Exception("Error fetching employee details.");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        isLoading = false;
     }
 }

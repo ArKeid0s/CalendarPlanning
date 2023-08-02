@@ -9,7 +9,7 @@
 <AuthorizeView>
     <Authorized>
         <CreateIncentive OnIncentiveCreated=@RefreshIncentives />
-        <IncentiveList Incentives="@_incentives" />
+        <IncentiveList />
     </Authorized>
 
     <NotAuthorized>
@@ -17,13 +17,10 @@
     </NotAuthorized>
 </AuthorizeView>
 
-@code {
-    private List<IncentiveDto>? _incentives;
-
+@code
+{
     private async Task RefreshIncentives()
     {
-        var (userId, isAdmin) = await IncentivesService.GetUserRoleDetails();
-        _incentives = await IncentivesService.LoadIncentivesAsync(isAdmin, userId);
-        StateHasChanged();
+        await IncentivesService.LoadIncentives();
     }
 }

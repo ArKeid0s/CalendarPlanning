@@ -1,7 +1,7 @@
 ﻿@using CalendarPlanning.Shared.Models.DTO;
 
-@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject IEmployeesService EmployeesService
 
 @if (employees is null)
 {
@@ -30,7 +30,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        employees = await Http.GetFromJsonAsync<List<EmployeeDto>>("api/Employees");
+        employees = await EmployeesService.GetAllAsync();
     }
 
     public void RowClicked(DataGridRowClickEventArgs<EmployeeDto> row)

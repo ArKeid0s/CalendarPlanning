@@ -1,7 +1,7 @@
 ﻿@using CalendarPlanning.Shared.Enums;
 @using CalendarPlanning.Shared.Models.Requests.IncentiveRequests;
 @using System.Security.Claims;
-@inject HttpClient Http
+@inject IIncentivesService IncentivesService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudText Typo="Typo.h3">Create Incentive</MudText>
@@ -15,13 +15,13 @@
                 <MudCardContent>
                     <MudTextField Label="Client First Name" @bind-Value="createIncentiveRequest.ClientFirstName" For="@(() => createIncentiveRequest.ClientFirstName)" />
                     <MudTextField Label="Client Last Name" @bind-Value="createIncentiveRequest.ClientLastName" For="@(() => createIncentiveRequest.ClientLastName)" Class="mt-3" />
-                    <MudSelect @bind-Value="createIncentiveRequest.IncentiveUnifocal" T="IncentiveTypeEnum" Label="Unifocal Incentive" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" Class="mt-3">
+                    <MudSelect @bind-Value="createIncentiveRequest.IncentiveUnifocal" T="IncentiveTypeEnum" Label="Unifocal Incentive" Variant="Variant.Filled" Required RequiredError="You must select an incentive type." AnchorOrigin="Origin.BottomCenter" Class="mt-3">
                         @foreach (IncentiveTypeEnum incentive in Enum.GetValues(typeof(IncentiveTypeEnum)))
                         {
                             <MudSelectItem Value="@incentive">@incentive</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudSelect @bind-Value="createIncentiveRequest.IncentiveProgressive" Label="Progressive Incentive" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" Class="mt-3">
+                    <MudSelect @bind-Value="createIncentiveRequest.IncentiveProgressive" Label="Progressive Incentive" Variant="Variant.Filled" Required RequiredError="You must select an incentive type." AnchorOrigin="Origin.BottomCenter" Class="mt-3">
                         @foreach (IncentiveTypeEnum incentive in Enum.GetValues(typeof(IncentiveTypeEnum)))
                         {
                             <MudSelectItem Value="@incentive">@incentive</MudSelectItem>
@@ -64,7 +64,7 @@
             createIncentiveRequest.EmployeeId = user.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         }
 
-        var response = await Http.PostAsJsonAsync("/api/Incentives", createIncentiveRequest);
+        var response = await IncentivesService.CreateIncentiveAsync(createIncentiveRequest);
 
         if (response.IsSuccessStatusCode)
         {

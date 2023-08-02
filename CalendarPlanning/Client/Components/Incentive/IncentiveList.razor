@@ -1,30 +1,31 @@
 ﻿@using CalendarPlanning.Shared.Enums;
 @using CalendarPlanning.Shared.Models.DTO;
 @using System.Security.Claims;
-@inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IIncentivesService IncentivesService
 @inject IEmployeesService EmployeesService
 
-@if (Incentives is null)
+@if (IncentivesService.Incentives is null)
 {
     <MudProgressCircular Size="Size.Medium" Indeterminate="true" />
 }
-
-@if (_isAdmin && _employees is not null)
+else if (_isAdmin && EmployeesService.Employees is not null)
 {
     <MudText Typo="Typo.h3" Class="my-3">Incentives</MudText>
     <MudTabs Elevation="0" Rounded="false" ApplyEffectsToContainer="false" PanelClass="pa-6">
         <ChildContent>
-            @foreach (EmployeeDto employee in _employees)
+            @foreach (EmployeeDto employee in EmployeesService.Employees)
             {
                 <MudTabPanel Text="@($"{employee.FirstName} {employee.LastName}")">
-                    <MudDataGrid Items="@Incentives!.Where((i) => i.EmployeeId == employee.EmployeeId)" T="IncentiveDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="0" Striped="true" Hover="true">
+                    <MudToolBar WrapContent="true">
+                        <UserIncentivesValueCalculator UserId="@employee.EmployeeId" />
+                    </MudToolBar>
+                    <MudDataGrid Items="@IncentivesService.Incentives!.Where((i) => i.EmployeeId == employee.EmployeeId)" T="IncentiveDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="1" Striped="true" Hover="true">
                         <Columns>
                             <PropertyColumn Title="First Name" Property="x => x.ClientFirstName" />
                             <PropertyColumn Title="Last Name" Property="x => x.ClientLastName" />
-                            <PropertyColumn Title="Last Name" Property="x => x.IncentiveUnifocal" />
-                            <PropertyColumn Title="Last Name" Property="x => x.IncentiveProgressive" />
+                            <PropertyColumn Title="Incentive Unifocal" Property="x => x.IncentiveUnifocal" />
+                            <PropertyColumn Title="Incentive Progressive" Property="x => x.IncentiveProgressive" />
                             <TemplateColumn CellClass="d-flex justify-end">
                                 <CellTemplate>
                                     <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="Color.Error" OnClick="@(() => HandleDeleteIncentive(context.Item.IncentiveId))" />
@@ -42,17 +43,17 @@
 }
 else
 {
-    <MudToolBar WrapContent="true">
+    <MudToolBar WrapContent="true" Class="my-3">
         <MudText Typo="Typo.h3">My Incentives</MudText>
         <MudSpacer />
         <IncentivesValueCalculator />
     </MudToolBar>
-    <MudDataGrid Items="@Incentives" T="IncentiveDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="0" Striped="true" Hover="true">
+    <MudDataGrid Items="@IncentivesService.Incentives" T="IncentiveDto" Filterable="false" SortMode="SortMode.None" Groupable="false" Virtualize="true" FixedHeader="true" Height="500px" Elevation="1" Striped="true" Hover="true">
         <Columns>
             <PropertyColumn Title="First Name" Property="x => x.ClientFirstName" />
             <PropertyColumn Title="Last Name" Property="x => x.ClientLastName" />
-            <PropertyColumn Title="Last Name" Property="x => x.IncentiveUnifocal" />
-            <PropertyColumn Title="Last Name" Property="x => x.IncentiveProgressive" />
+            <PropertyColumn Title="Incentive Unifocal" Property="x => x.IncentiveUnifocal" />
+            <PropertyColumn Title="Incentive Progressive" Property="x => x.IncentiveProgressive" />
             <TemplateColumn CellClass="d-flex justify-end">
                 <CellTemplate>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="Color.Error" OnClick="@(() => HandleDeleteIncentive(context.Item.IncentiveId))" />
@@ -75,9 +76,6 @@ else
 </MudMessageBox>
 
 @code {
-    [Parameter]
-    public List<IncentiveDto>? Incentives { get; set; }
-    private List<EmployeeDto>? _employees;
     private MudMessageBox? messageBox;
 
     private string _userId = string.Empty;
@@ -85,9 +83,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await IncentivesService.LoadIncentives();
+        await EmployeesService.LoadEmployees();
+
         (_userId, _isAdmin) = await IncentivesService.GetUserRoleDetails();
-        Incentives = await IncentivesService.LoadIncentivesAsync(_isAdmin, _userId);
-        _employees = await EmployeesService.GetAllAsync();
+
+        IncentivesService.OnIncentivesUpdated += StateHasChanged;
     }
 
     private async Task HandleDeleteIncentive(Guid id)
@@ -96,7 +97,7 @@ else
         if (result is not null && result is true)
         {
             await IncentivesService.DeleteIncentiveAsync(_userId, id);
-            Incentives = await IncentivesService.LoadIncentivesAsync(_isAdmin, _userId);
+            await IncentivesService.LoadIncentives();
         }
     }
 }
