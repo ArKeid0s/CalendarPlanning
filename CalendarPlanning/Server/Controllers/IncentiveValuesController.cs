@@ -20,7 +20,7 @@ namespace CalendarPlanning.Server.Controllers
             _incentiveValuesService = incentiveValuesService;
         }
 
-        [Authorize(Policy = Policies.WriteAccess)]
+        [Authorize(Policy = Policies.ReadAccess)]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IncentiveValue>>> GetIncentiveValues()
         {
@@ -34,7 +34,7 @@ namespace CalendarPlanning.Server.Controllers
             }
         }
 
-        [Authorize(Policy = Policies.WriteAccess)]
+        [Authorize(Policy = Policies.ReadAccess)]
         [HttpGet("{id}")]
         public async Task<ActionResult<IncentiveValue>> GetIncentiveValueById(int id)
         {
