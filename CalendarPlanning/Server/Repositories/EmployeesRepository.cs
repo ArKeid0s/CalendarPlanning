@@ -99,5 +99,10 @@ namespace CalendarPlanning.Server.Repositories
                 throw new EmployeeSaveUpdateException(employee.EmployeeId, ex.Message);
             }
         }
+
+        public Task<int> GetEmployeesCountAsync()
+        {
+            return _dbContext.Employees.CountAsync();
+        }
     }
 }

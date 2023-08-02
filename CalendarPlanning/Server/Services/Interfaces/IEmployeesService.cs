@@ -6,6 +6,7 @@ namespace CalendarPlanning.Server.Services.Interfaces
     public interface IEmployeesService
     {
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
+        Task<int> GetEmployeesCountAsync();
         Task<EmployeeDto> GetEmployeeByIdAsync(string id);
         Task<EmployeeDto> CreateEmployeeAsync(CreateEmployeeRequest createEmployeeRequest);
         Task UpdateEmployeeAsync(string id, UpdateEmployeeRequest updateEmployeeRequest);

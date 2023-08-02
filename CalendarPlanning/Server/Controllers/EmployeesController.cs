@@ -23,6 +23,7 @@ namespace CalendarPlanning.Server.Controllers
         }
 
         // GET: api/<EmployeesController>
+        [Authorize(Policy = Policies.ReadAccess)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -37,6 +38,27 @@ namespace CalendarPlanning.Server.Controllers
                 {
                     errorCode = StatusCodes.Status500InternalServerError,
                     error = "Error while getting employees",
+                    message = ex.Message,
+                    traceId = Activity.Current?.TraceId.ToString()
+                });
+            }
+        }
+
+        [Authorize(Policy = Policies.ReadAccess)]
+        [HttpGet("count")]
+        public async Task<IActionResult> GetEmployeesCount()
+        {
+            try
+            {
+                return Ok(await _employeesService.GetEmployeesCountAsync());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting employees count on machine {Machine}. TraceId: {TraceId}", Environment.MachineName, Activity.Current?.TraceId);
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    errorCode = StatusCodes.Status500InternalServerError,
+                    error = "Error while getting employees count",
                     message = ex.Message,
                     traceId = Activity.Current?.TraceId.ToString()
                 });

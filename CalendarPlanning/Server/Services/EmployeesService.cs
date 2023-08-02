@@ -85,6 +85,11 @@ namespace CalendarPlanning.Server.Services
             return await _employeesRepository.GetEmployeesAsync();
         }
 
+        public Task<int> GetEmployeesCountAsync()
+        {
+            return _employeesRepository.GetEmployeesCountAsync();
+        }
+
         public async Task UpdateEmployeeAsync(string id, UpdateEmployeeRequest updateEmployeeRequest)
         {
             var stores = await _storesRepository.GetStoresAsNoTrackingAsync();

@@ -6,6 +6,7 @@ namespace CalendarPlanning.Server.Repositories.Interfaces
     public interface IEmployeesRepository
     {
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
+        Task<int> GetEmployeesCountAsync();
         Task<EmployeeDto> GetEmployeeByIdAsync(string id);
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsNoTrackingAsync();
         Task<EmployeeDto> GetEmployeeByIdAsNoTrackingAsync(string id);
