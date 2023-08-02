@@ -1,14 +1,17 @@
 ﻿@using CalendarPlanning.Shared.Models.DTO;
 @inject IIncentiveValuesService IncentiveValuesService
 
-<MudText Typo="Typo.h5" Class="mr-3"><b>@($"Individual Bonus: {IncentiveValuesService.TotalIndividualIncentiveValue}€")</b></MudText>
+<MudText Typo="Typo.h5" Class="mr-3"><b>@($"Individual Bonus: {IncentiveValuesService.UserIndividualIncentiveValue}€")</b></MudText>
 <MudText Typo="Typo.h5">@($"Collective Bonus: {IncentiveValuesService.TotalCollectiveIncentiveValue}€")</MudText>
 
-@code
+    @code
     {
+    [Parameter]
+    public string UserId { get; set; } = null!;
+
     protected override void OnInitialized()
     {
         IncentiveValuesService.OnValuesUpdated += StateHasChanged;
-        IncentiveValuesService.CalculateIncentiveValues();
+        IncentiveValuesService.CalculateUserIncentiveValues(UserId);
     }
 }

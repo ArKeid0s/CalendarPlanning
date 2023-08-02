@@ -1,49 +1,51 @@
 ﻿@using CalendarPlanning.Shared.Models.DTO;
 @using CalendarPlanning.Shared.ModelExtensions;
-@inject HttpClient Http
+@using CalendarPlanning.Shared.Models.Requests.IncentiveValueRequests;
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IIncentiveValuesService IncentiveValuesService
+
+<MudText Typo="Typo.h3">
+    Incentive Values
+    @if (!_isEditing)
+    {
+        <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Error" Size="Size.Large" Title="Edition locked" />
+    }
+    else
+    {
+        <MudIcon Icon="@Icons.Material.Filled.LockOpen" Color="Color.Warning" Size="Size.Large" Title="Edition unlocked" />
+    }
+</MudText>
 
 @if (incentiveValues is null)
 {
     <MudProgressCircular Size="Size.Medium" Indeterminate="true" />
 }
-else
-{
-    foreach (var incentiveValue in incentiveValues)
-    {
-        <EditForm Model="incentiveValue" OnValidSubmit="() => HandleValidSubmit(incentiveValue.ToModel())">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
 
-            <div class="flex-row">
+<div class="d-flex flex-wrap mt-4">
+    <MudSwitch @bind-Checked="@_isEditing" Color="Color.Primary">Edit Values</MudSwitch>
+</div>
+<MudDataGrid T="IncentiveValueDto" Items="@incentiveValues" ReadOnly="@(!_isEditing)" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommittedItemChanges"
+             Hover="true" Striped="true" Bordered="true" Dense="false" EditTrigger="DataGridEditTrigger.OnRowClick" Elevation="1">
 
-                <div class ="flex-item">
-                    <label for="name">@incentiveValue.Name</label>
-                </div>
+    <Columns>
+        <PropertyColumn Title="Name" Property="x => x.Name" IsEditable="false" />
+        <PropertyColumn Title="Unifocal Value" Property="x => x.UnifocalValue">
+            <EditTemplate>
+                <MudNumericField @bind-Value="@context.Item.UnifocalValue" Variant="Variant.Text" Min="0" Step=".1M" />
+            </EditTemplate>
+        </PropertyColumn>
+        <PropertyColumn Title="Progressive Value" Property="x => x.ProgressiveValue">
+            <EditTemplate>
+                <MudNumericField @bind-Value="@context.Item.ProgressiveValue" Variant="Variant.Text" Min="0" Step=".1M" />
+            </EditTemplate>
+        </PropertyColumn>
+    </Columns>
 
-                <div class ="flex-item">
-                    <label for="unifocalValue">Unifocal Value:</label>
-                    <InputNumber id="unifocalValue" @bind-Value="incentiveValue.UnifocalValue" step="0.01" />
-                    <ValidationMessage For="@(() => incentiveValue.UnifocalValue)" />
-                </div>
-
-                <div class="flex-item">
-                    <label for="progressiveValue">Progressive Value:</label>
-                    <InputNumber id="progressiveValue" @bind-Value="incentiveValue.ProgressiveValue" step="0.01" />
-                    <ValidationMessage For="@(() => incentiveValue.ProgressiveValue)" />
-                </div>
-
-                <div class="flex-item">
-                    <button type="submit">Save Changes</button>
-                </div>
-
-            </div>
-        </EditForm>
-    }
-}
+</MudDataGrid>
 
 @code {
     private List<IncentiveValueDto>? incentiveValues;
+    private bool _isEditing = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,20 +60,17 @@ else
 
     public async Task LoadIncentiveValues()
     {
-        incentiveValues = await Http.GetFromJsonAsync<List<IncentiveValueDto>>("api/IncentiveValues");
+        incentiveValues = await IncentiveValuesService.GetAllAsync();
     }
 
-    private async Task HandleValidSubmit(IncentiveValue incentiveValue)
+    private async void CommittedItemChanges(IncentiveValueDto incentiveValue)
     {
-        var response = await Http.PutAsJsonAsync($"api/IncentiveValues/{incentiveValue.Id}", incentiveValue);
-        if (response.IsSuccessStatusCode)
-        {
-            await LoadIncentiveValues();
-            StateHasChanged();
-        }
-        else
-        {
-            // Handle error
-        }
+        UpdateIncentiveValueRequest request = new UpdateIncentiveValueRequest
+            {
+                UnifocalValue = incentiveValue.UnifocalValue,
+                ProgressiveValue = incentiveValue.ProgressiveValue
+            };
+
+        bool result = await IncentiveValuesService.UpdateIncentiveValue(incentiveValue.Id, request);
     }
 }

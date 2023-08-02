@@ -17,6 +17,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IIncentivesService, IncentivesService>();
+builder.Services.AddScoped<IIncentiveValuesService, IncentiveValuesService>();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 
 builder.Services.AddMudServices();
