@@ -38,6 +38,7 @@ namespace CalendarPlanning.Server.Data
         {
             // --- Services ---
             services
+                .AddHttpContextAccessor()
                 .AddScoped<IEmployeesService, EmployeesService>()
                 .AddScoped<IHolidaysService, HolidaysService>()
                 .AddScoped<ISchedulesService, SchedulesService>()

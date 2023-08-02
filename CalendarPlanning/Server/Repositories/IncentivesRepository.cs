@@ -1,6 +1,5 @@
 ﻿using CalendarPlanning.Server.Data;
 using CalendarPlanning.Server.Repositories.Interfaces;
-using CalendarPlanning.Shared.Exceptions.EmployeeExceptions;
 using CalendarPlanning.Shared.Exceptions.IncentiveExceptions;
 using CalendarPlanning.Shared.ModelExtensions;
 using CalendarPlanning.Shared.Models;
@@ -12,10 +11,12 @@ namespace CalendarPlanning.Server.Repositories
     public class IncentivesRepository : IIncentivesRepository
     {
         private readonly APIDbContext _dbContext;
+        private readonly IHttpContextAccessor _http;
 
-        public IncentivesRepository(APIDbContext dbContext)
+        public IncentivesRepository(APIDbContext dbContext, IHttpContextAccessor http)
         {
             _dbContext = dbContext;
+            _http = http;
         }
 
         public async Task<IncentiveDto> CreateIncentiveAsync(Incentive incentive)
@@ -36,11 +37,18 @@ namespace CalendarPlanning.Server.Repositories
 
         public async Task DeleteIncentiveOfUserByIdAsync(string userId, Guid id)
         {
-            var employee = _dbContext.Employees.FirstOrDefault(e => e.EmployeeId == userId)
-                ?? throw new EmployeeNotFoundException(userId);
+            IQueryable<Incentive> query;
 
-            var result = await _dbContext.Incentives.Where(i => i.IncentiveId == id && employee.EmployeeId == userId)
-                .ExecuteDeleteAsync();
+            if (_http.HttpContext!.User.IsInRole("Admin"))
+            {
+                query = _dbContext.Incentives.Where(i => i.IncentiveId == id);
+            }
+            else
+            {
+                query = _dbContext.Incentives.Where(i => i.IncentiveId == id && i.EmployeeId == userId);
+            }
+
+            int result = await query.ExecuteDeleteAsync();
 
             if (result == 0) throw new IncentiveNotFoundException(id);
         }
