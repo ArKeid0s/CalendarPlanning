@@ -9,29 +9,14 @@ services:
       dockerfile: CalendarPlanning/Server/Dockerfile
     ports:
         - 8002:80
-    depends_on:
-        - sql_server_db
     networks:
         - backend
     environment:
-        - DB_HOST=sql_server_db
-        - DB_NAME=CalendarPlanning
-        - DB_SA_PASSWORD=Adminpwd99!
+        - DB_FILE_LOCATION=/db
         - ADMIN_EMAIL=admin@example.com
-        - ADMIN_PASSWORD=AdminUserpwd99!
-    
-
-
-  sql_server_db:
-    container_name: calendar_planning_db  
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    ports:
-        - 8001:1433
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=Adminpwd99!
-    networks:
-        - backend
+        - ADMIN_PASSWORD=Admin!12
+    volumes:
+        - ./db:/db
 
 networks:
   backend:
