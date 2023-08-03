@@ -19,6 +19,7 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IIncentivesService, IncentivesService>();
 builder.Services.AddScoped<IIncentiveValuesService, IncentiveValuesService>();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
+builder.Services.AddScoped<IStoresService, StoresService>();
 
 builder.Services.AddMudServices();
 

@@ -1,6 +1,8 @@
 ﻿@page "/register"
+@using CalendarPlanning.Shared.Models.DTO;
 @using CalendarPlanning.Shared.Models.Requests.AuthenticationRequests;
 @inject IAuthenticationService AuthService
+@inject IStoresService StoresService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Register</PageTitle>
@@ -11,42 +13,60 @@
     <MudAlert Severity="Severity.Error" Class="my-3">@registerResult.ErrorMessage</MudAlert>
 }
 
-<EditForm Model="registerUserRequest" OnValidSubmit="@HandleRegistration">
-    <DataAnnotationsValidator />
+@if (stores is null)
+{
+    <MudProgressCircular Class="my-3" Size="Size.Small" Indeterminate="true" />
+}
+else
+{
+    <EditForm Model="registerUserRequest" OnValidSubmit="@HandleRegistration">
+        <DataAnnotationsValidator />
 
-    <MudGrid Class="my-3">
-        <MudItem xs="12">
-            <MudCard>
-                <MudCardContent>
-                    <MudTextField Label="First Name" @bind-Value="registerUserRequest.FirstName" For="@(() => registerUserRequest.FirstName)" />
-                    <MudTextField Label="Last Name" @bind-Value="registerUserRequest.LastName" For="@(() => registerUserRequest.LastName)" Class="mt-3" />
-                    <MudTextField Label="Store Name" @bind-Value="registerUserRequest.StoreName" For="@(() => registerUserRequest.StoreName)" Class="mt-3" />
-                    <MudTextField Label="Email address" InputType="InputType.Email" @bind-Value="registerUserRequest.Email" For="@(() => registerUserRequest.Email)" Class="mt-3" />
-                    <MudTextField Label="Password" InputType="InputType.Password" @bind-Value="registerUserRequest.Password" For="@(() => registerUserRequest.Password)" Class="mt-3" />
-                    <MudTextField Label="Confirm Password" InputType="InputType.Password" @bind-Value="registerUserRequest.ConfirmPassword" For="@(() => registerUserRequest.ConfirmPassword)" Class="mt-3" />
-                </MudCardContent>
-                <MudCardActions Class="d-flex align-center justify-center">
-                    <MudButton ButtonType="ButtonType.Submit" Disabled="@isSubmitting" Variant="Variant.Filled" Color="Color.Primary">
-                        @if (isSubmitting)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <MudText Class="ms-2 cursor-wait">Loading...</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Register</MudText>
-                        }
-                    </MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
-</EditForm>
+        <MudGrid Class="my-3">
+            <MudItem xs="12">
+                <MudCard>
+                    <MudCardContent>
+                        <MudTextField Label="First Name" @bind-Value="registerUserRequest.FirstName" For="@(() => registerUserRequest.FirstName)" Required />
+                         <MudTextField Label="Last Name" @bind-Value="registerUserRequest.LastName" For="@(() => registerUserRequest.LastName)" Required Class="mt-3" />
+                         <MudSelect Label="Store" T="string" @bind-Value="registerUserRequest.StoreName" For="@(() => registerUserRequest.StoreName)" Required AnchorOrigin="Origin.BottomCenter" Class="mt-3">
+                             @foreach (var store in stores)
+                            {
+                                <MudSelectItem Value="@store.Name">@store.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudTextField Label="Email address" InputType="InputType.Email" @bind-Value="registerUserRequest.Email" For="@(() => registerUserRequest.Email)" Required Class="mt-3" />
+                         <MudTextField Label="Password" InputType="InputType.Password" @bind-Value="registerUserRequest.Password" For="@(() => registerUserRequest.Password)" Required Class="mt-3" />
+                         <MudTextField Label="Confirm Password" InputType="InputType.Password" @bind-Value="registerUserRequest.ConfirmPassword" For="@(() => registerUserRequest.ConfirmPassword)" Required Class="mt-3" />
+                     </MudCardContent>
+                     <MudCardActions Class="d-flex align-center justify-center">
+                         <MudButton ButtonType="ButtonType.Submit" Disabled="@isSubmitting" Variant="Variant.Filled" Color="Color.Primary">
+                             @if (isSubmitting)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2 cursor-wait">Loading...</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Register</MudText>
+                            }
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
 
 @code {
     private RegisterUserRequest registerUserRequest = new RegisterUserRequest();
     private RegisterResult? registerResult;
     private bool isSubmitting = false;
+    private List<StoreDto>? stores;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stores = await StoresService.GetAllAsync();
+    }
 
     private async Task HandleRegistration()
     {
