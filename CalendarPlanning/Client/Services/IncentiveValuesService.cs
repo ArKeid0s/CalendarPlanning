@@ -66,7 +66,7 @@ namespace CalendarPlanning.Client.Services
 
                 if (incentiveValues.TryGetValue((int)incentive.IncentiveProgressive, out var progressiveValue))
                 {
-                    total += incentive.IncentiveUnifocal != IncentiveTypeEnum.AVIS_GOOGLE
+                    total += incentive.IncentiveProgressive != IncentiveTypeEnum.AVIS_GOOGLE
                         ? Math.Round(progressiveValue.ProgressiveValue * percentage, 2)
                         : 0m;
                 }
@@ -135,15 +135,14 @@ namespace CalendarPlanning.Client.Services
             UserIndividualIncentiveValue = await GetUserTotalIndividualIncentiveValue(userId);
             TotalCollectiveIncentiveValue = await GetTotalCollectiveIncentiveValueAsync(_incentivesService.Incentives);
             NotifyValuesUpdated();
+            Console.WriteLine(userId + " indi: " + UserIndividualIncentiveValue + " " + TotalCollectiveIncentiveValue);
         }
 
         private async Task<decimal> GetUserTotalIndividualIncentiveValue(string userId)
         {
             var incentives = _incentivesService.Incentives?.Where(i => i.EmployeeId == userId).ToList();
 
-            if (incentives == null) return 0m;
-
-            Console.WriteLine("GetUserTotalIndividualIncentiveValue list values: " + incentives.Count);
+            if (incentives == null || incentives.Count == 0) return 0m;
 
             var incentiveValues = (await GetAllAsync())!.ToDictionary(iv => iv.Id, iv => iv);
 
@@ -161,7 +160,7 @@ namespace CalendarPlanning.Client.Services
 
                 if (incentiveValues.TryGetValue((int)incentive.IncentiveProgressive, out var progressiveValue))
                 {
-                    total += incentive.IncentiveUnifocal != IncentiveTypeEnum.AVIS_GOOGLE
+                    total += incentive.IncentiveProgressive != IncentiveTypeEnum.AVIS_GOOGLE
                         ? Math.Round(progressiveValue.ProgressiveValue * percentage, 2)
                         : 0m;
                 }
