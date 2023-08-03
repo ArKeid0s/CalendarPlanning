@@ -5,6 +5,7 @@ using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using CalendarPlanning.Shared.Models;
+using System.Diagnostics;
 
 namespace CalendarPlanning.Server.Data
 {
@@ -12,16 +13,10 @@ namespace CalendarPlanning.Server.Data
     {
         public static IServiceCollection AddRepositories<T>(this IServiceCollection services) where T : DbContext
         {
-            var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost,8001";
-            var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "CalendarPlanning";
-            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "sa";
-            var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? "Adminpwd99!";
-            var connectionString = $"Server={dbHost};Database={dbName};User ID={dbUser};Password={dbPassword};TrustServerCertificate=True";
+            var dbFileLocation = Environment.GetEnvironmentVariable("DB_FILE_LOCATION");
+            var connectionString = $"Data Source={dbFileLocation}/calendar_planning.sqlite";
 
-            services.AddDbContext<T>(options => options.UseSqlServer(connectionString, sqlOptions =>
-            {
-                sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
-            }))
+            services.AddDbContext<T>(options => options.UseSqlite(connectionString))
             // --- Repositories ---
                 .AddScoped<IEmployeesRepository, EmployeesRepository>()
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
@@ -87,6 +82,7 @@ namespace CalendarPlanning.Server.Data
         {
             using var scope = serviceProvider.CreateScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<APIDbContext>();
 
             var adminUser = new ApplicationUser
             {
@@ -104,6 +100,14 @@ namespace CalendarPlanning.Server.Data
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
+                dbContext.Employees.Add(new Employee
+                {
+                    EmployeeId = adminUser.Id,
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    StoreId = dbContext.Stores.FirstOrDefault()!.StoreId
+                });
+                dbContext.SaveChanges();
             }
         }
     }
