@@ -9,10 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalendarPlanning.Client", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalendarPlanning.Shared", "CalendarPlanning\Shared\CalendarPlanning.Shared.csproj", "{4FB5866A-01C0-4A52-976E-8BFBF79DD582}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4E778677-7EFC-4338-99B3-58AF6C353ADD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B72FAC1D-B140-40F9-9328-ADC31F6EB1DA}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main_calendarplanning.yml = .github\workflows\main_calendarplanning.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -34,10 +33,6 @@ Global
 		{4FB5866A-01C0-4A52-976E-8BFBF79DD582}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FB5866A-01C0-4A52-976E-8BFBF79DD582}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FB5866A-01C0-4A52-976E-8BFBF79DD582}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E778677-7EFC-4338-99B3-58AF6C353ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E778677-7EFC-4338-99B3-58AF6C353ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E778677-7EFC-4338-99B3-58AF6C353ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E778677-7EFC-4338-99B3-58AF6C353ADD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
