@@ -13,10 +13,9 @@ namespace CalendarPlanning.Server.Data
     {
         public static IServiceCollection AddRepositories<T>(this IServiceCollection services) where T : DbContext
         {
-            var dbFileLocation = Environment.GetEnvironmentVariable("DB_FILE_LOCATION");
-            var connectionString = $"Data Source={dbFileLocation}/calendar_planning.sqlite";
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
-            services.AddDbContext<T>(options => options.UseSqlite(connectionString))
+            services.AddDbContext<T>(options => options.UseNpgsql(connectionString))
             // --- Repositories ---
                 .AddScoped<IEmployeesRepository, EmployeesRepository>()
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
