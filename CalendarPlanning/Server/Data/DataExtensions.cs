@@ -13,7 +13,7 @@ namespace CalendarPlanning.Server.Data
     {
         public static IServiceCollection AddRepositories<T>(this IServiceCollection services, IConfiguration configuration) where T : DbContext
         {
-            var connectionString = configuration.GetConnectionString("POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING");
+            var connectionString = configuration["POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING"];
 
             services.AddDbContext<T>(options => options.UseNpgsql(connectionString, options =>
             {
