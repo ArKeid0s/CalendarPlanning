@@ -17,7 +17,6 @@ namespace CalendarPlanning.Server.Data
             var connectionString = configuration.GetConnectionString("POSTGRESQL_CONNECTIONSTRING");
 # else
             var connectionString = configuration["POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING"];
-            Console.WriteLine("CONNECTION STRING IS : " + connectionString);
 #endif
 
             services.AddDbContext<T>(options => options.UseNpgsql(connectionString, options =>

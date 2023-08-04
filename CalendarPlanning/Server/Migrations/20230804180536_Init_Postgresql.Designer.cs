@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CalendarPlanning.Server.Migrations
 {
     [DbContext(typeof(APIDbContext))]
-    [Migration("20230804161915_Init")]
-    partial class Init
+    [Migration("20230804180536_Init_Postgresql")]
+    partial class Init_Postgresql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

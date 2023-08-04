@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CalendarPlanning.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Init_Postgresql : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
