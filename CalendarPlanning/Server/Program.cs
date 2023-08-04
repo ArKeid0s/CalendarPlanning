@@ -61,7 +61,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
          c.SwaggerEndpoint("/swagger/v1/swagger.json", "CalendarPlanning v1"));
-    await app.Services.InitializeDatabaseAsync<APIDbContext>();
 }
 else
 {
@@ -69,6 +68,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+await app.Services.InitializeDatabaseAsync<APIDbContext>();
 
 await app.Services.AddRoles();
 await app.Services.AddAdminUser();
