@@ -14,8 +14,12 @@ namespace CalendarPlanning.Server.Data
         public static IServiceCollection AddRepositories<T>(this IServiceCollection services) where T : DbContext
         {
             var connectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING");
+            Console.Write("CONNECTION STRING IS : " + connectionString);
 
-            services.AddDbContext<T>(options => options.UseNpgsql(connectionString))
+            services.AddDbContext<T>(options => options.UseNpgsql(connectionString, options =>
+            {
+                options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(10), null);
+            }))
             // --- Repositories ---
                 .AddScoped<IEmployeesRepository, EmployeesRepository>()
                 .AddScoped<IHolidaysRepository, HolidaysRepository>()
