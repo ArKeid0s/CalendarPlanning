@@ -15,7 +15,6 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DB_FILE_LOCATION": "C:\\Users\\matpr\\source\\repos\\CalendarPlanning\\db",
         "ADMIN_EMAIL": "admin@example.com",
         "ADMIN_PASSWORD": "Admin!12"
       },
