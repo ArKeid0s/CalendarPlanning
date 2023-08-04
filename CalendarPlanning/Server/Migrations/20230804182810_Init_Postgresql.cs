@@ -75,8 +75,8 @@ namespace CalendarPlanning.Server.Migrations
                 columns: table => new
                 {
                     StoreId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(200)", nullable: false)
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -195,8 +195,8 @@ namespace CalendarPlanning.Server.Migrations
                 columns: table => new
                 {
                     EmployeeId = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     StoreId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -217,8 +217,8 @@ namespace CalendarPlanning.Server.Migrations
                 columns: table => new
                 {
                     IncentiveId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClientFirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    ClientLastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    ClientFirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    ClientLastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     IncentiveUnifocal = table.Column<int>(type: "integer", nullable: false),
                     IncentiveProgressive = table.Column<int>(type: "integer", nullable: false),
                     EmployeeId = table.Column<string>(type: "text", nullable: false)

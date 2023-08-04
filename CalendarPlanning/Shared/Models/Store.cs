@@ -10,10 +10,10 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid StoreId { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [StringLength(50)]
         public required string Name { get; set; }
 
-        [Column(TypeName = "nvarchar(200)")]
+        [StringLength(200)]
         public required string Address { get; set; }
 
         public virtual ICollection<Employee>? Employees { get; set; }

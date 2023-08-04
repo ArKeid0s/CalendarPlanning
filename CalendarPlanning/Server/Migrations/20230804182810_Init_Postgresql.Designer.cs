@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CalendarPlanning.Server.Migrations
 {
     [DbContext(typeof(APIDbContext))]
-    [Migration("20230804180536_Init_Postgresql")]
+    [Migration("20230804182810_Init_Postgresql")]
     partial class Init_Postgresql
     {
         /// <inheritdoc />
@@ -96,11 +96,13 @@ namespace CalendarPlanning.Server.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uuid");
@@ -120,11 +122,13 @@ namespace CalendarPlanning.Server.Migrations
 
                     b.Property<string>("ClientFirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ClientLastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("EmployeeId")
                         .IsRequired()
@@ -172,11 +176,13 @@ namespace CalendarPlanning.Server.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("StoreId");
 

@@ -10,10 +10,10 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public required string EmployeeId { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [StringLength(50)]
         public required string FirstName { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [StringLength(50)]
         public required string LastName { get; set; }
 
         [ForeignKey("StoreId")]
