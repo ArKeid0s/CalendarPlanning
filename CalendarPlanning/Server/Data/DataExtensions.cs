@@ -11,10 +11,9 @@ namespace CalendarPlanning.Server.Data
 {
     public static class DataExtensions
     {
-        public static IServiceCollection AddRepositories<T>(this IServiceCollection services) where T : DbContext
+        public static IServiceCollection AddRepositories<T>(this IServiceCollection services, IConfiguration configuration) where T : DbContext
         {
-            var connectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING");
-            Console.Write("CONNECTION STRING IS : " + connectionString);
+            var connectionString = configuration.GetConnectionString("POSTGRESQLCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING");
 
             services.AddDbContext<T>(options => options.UseNpgsql(connectionString, options =>
             {

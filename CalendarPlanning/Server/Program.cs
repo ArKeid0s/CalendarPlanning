@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // === DATABASE ===
-builder.Services.AddRepositories<APIDbContext>().AddServices();
+builder.Services.AddRepositories<APIDbContext>(builder.Configuration).AddServices();
 // === DATABASE ===
 
 // === AUTHENTICATION ===
