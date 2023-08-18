@@ -11,10 +11,10 @@ namespace CalendarPlanning.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid IncentiveId { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [StringLength(50)]
         public required string ClientFirstName { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [StringLength(50)]
         public required string ClientLastName { get; set; }
 
         public required IncentiveTypeEnum IncentiveUnifocal { get; set; }
