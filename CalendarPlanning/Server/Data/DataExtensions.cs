@@ -1,11 +1,11 @@
 ﻿using CalendarPlanning.Server.Repositories.Interfaces;
 using CalendarPlanning.Server.Repositories;
 using Microsoft.EntityFrameworkCore;
-using CalendarPlanning.Server.Services.Interfaces;
 using CalendarPlanning.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using CalendarPlanning.Shared.Models;
 using System.Diagnostics;
+using CalendarPlanning.Server.Services.Interfaces;
 
 namespace CalendarPlanning.Server.Data
 {
