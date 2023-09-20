@@ -1,6 +1,7 @@
 # CalendarPlanning
 Link to the app: https://calendarplanning.azurewebsites.net/
-Test user : admin@example.com / Admin!12
+
+Test user : admin@example.com / Admin!12 OR you can create an account to see the employee view
  
 Blazor WASM and Asp .Net Core hosted app.
 
