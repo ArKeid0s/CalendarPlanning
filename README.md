@@ -1,4 +1,7 @@
 # CalendarPlanning
+Link to the app: https://calendarplanning.azurewebsites.net/
+Test user : admin@example.com / Admin!12
+ 
 Blazor WASM and Asp .Net Core hosted app.
 
 Published to Azure Web Service through github actions.
